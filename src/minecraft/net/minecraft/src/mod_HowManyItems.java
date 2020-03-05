@@ -36,7 +36,7 @@ public class mod_HowManyItems extends BaseMod
 
 	public String Version()
     {
-        return "v4.1.0";
+        return "v4.1.0_2";
     }
 	
 	public String Description() {

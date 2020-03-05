@@ -811,6 +811,7 @@ public class Gui_HMI extends GuiScreen {
 	                for(ItemStack hiddenItem : hiddenItems) {
 	                	if(itemstack.isItemEqual(hiddenItem)) {
 	                		itemstack = hiddenItem;
+	                		break;
 	                	}
 	                }
 	                try
@@ -843,23 +844,26 @@ public class Gui_HMI extends GuiScreen {
 	        recipeLoop : for(Iterator iterator = recipes.iterator(); iterator.hasNext();)
 	        {
 	            IRecipe irecipe = (IRecipe)iterator.next();
-	            if(!irecipe.getRecipeOutput().getHasSubtypes()) {
+	            ItemStack itemstack = new ItemStack(irecipe.getRecipeOutput().getItem(), 1, irecipe.getRecipeOutput().getItemDamage());
+                for(ItemStack hiddenItem : hiddenItems) {
+                	if(itemstack.isItemEqual(hiddenItem)) {
+                		itemstack = hiddenItem;
+                		break;
+                	}
+                }
+	            if(!itemstack.getHasSubtypes()) {
 	            	continue recipeLoop;
 	            }
 	            for(ItemStack item : allItems) {
-	            	if(item.isItemEqual(irecipe.getRecipeOutput()))
-	            		continue recipeLoop;
-	            }
-	            for(ItemStack item : allItems) {
-	            	if(item.isItemEqual(irecipe.getRecipeOutput())) {
+	            	if(item.isItemEqual(itemstack)) {
 	            		continue recipeLoop;
 	            	}
-	            	if(item.itemID > irecipe.getRecipeOutput().itemID || (item.itemID == irecipe.getRecipeOutput().itemID && item.getItemDamage() > irecipe.getRecipeOutput().getItemDamage())) {
-	            		allItems.add(allItems.indexOf(item), new ItemStack(irecipe.getRecipeOutput().itemID, 1, irecipe.getRecipeOutput().getItemDamage()));
+	            	if(item.itemID > itemstack.itemID || (item.itemID == itemstack.itemID && item.getItemDamage() > itemstack.getItemDamage())) {
+	            		allItems.add(allItems.indexOf(item), itemstack);
 	            		continue recipeLoop;
 	            	}
 	            }
-	            allItems.add(new ItemStack(irecipe.getRecipeOutput().itemID, 1, irecipe.getRecipeOutput().getItemDamage()));
+	            allItems.add(itemstack);
 	           
 	        }
 			currentItems = getCurrentList(allItems);
