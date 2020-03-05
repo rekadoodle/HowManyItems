@@ -21,3 +21,35 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# MCP files
+*.bat
+*.sh
+/bin
+/reobf
+/jars
+/conf
+/docs
+/runtime
+/temp
+
+# Eclipse Resources
+/eclipse/*
+!/eclipse/Client
+/eclipse/Client/*
+!/eclipse/Client/bin
+/eclipse/Client/bin/*
+!/eclipse/Client/bin/hmi
+
+# MC Forge
+/forge
+
+# Source
+/src/minecraft/*
+/src/minecraft_server/*
+!/src/minecraft/net
+!/src/minecraft/hmi
+/src/minecraft/net/minecraft/*
+!/src/minecraft/net/minecraft/src
+/src/minecraft/net/minecraft/src/*
+!/src/minecraft/net/minecraft/src/mod_HowManyItems.java

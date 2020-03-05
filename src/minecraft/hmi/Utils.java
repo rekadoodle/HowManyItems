@@ -18,7 +18,6 @@ import net.minecraft.src.*;
 public class Utils {
 	private static ArrayList<ItemStack> allItems;
 	private static Method getSlotAtPositionMethod = getMethod(GuiContainer.class, new String[] {"getSlotAtPosition", "a"}, new Class<?>[] {int.class, int.class});
-	private static Method drawGradientRectMethod = getMethod(Gui.class, new String[] {"drawGradientRect", "a"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class, int.class});
 	public static RenderItem itemRenderer = new RenderItem();
 	public static Random rand = new Random();
 	public static Gui gui = new Gui();
@@ -134,18 +133,19 @@ public class Utils {
 	        recipeLoop : for(Iterator iterator = recipes.iterator(); iterator.hasNext();)
 	        {
 	            IRecipe irecipe = (IRecipe)iterator.next();
-	            ItemStack itemstack = new ItemStack(irecipe.getRecipeOutput().getItem(), 1, irecipe.getRecipeOutput().getItemDamage());
-                for(ItemStack hiddenItem : GuiOverlay.hiddenItems) {
-                	if(itemstack.isItemEqual(hiddenItem)) {
-                		itemstack = hiddenItem;
-                		break;
-                	}
-                }
-	            if(!itemstack.getHasSubtypes()) {
-	            	continue recipeLoop;
+	            if(irecipe != null && irecipe.getRecipeOutput() != null && irecipe.getRecipeOutput().getItem() != null) {
+	            	ItemStack itemstack = new ItemStack(irecipe.getRecipeOutput().getItem(), 1, irecipe.getRecipeOutput().getItemDamage());
+	                for(ItemStack hiddenItem : GuiOverlay.hiddenItems) {
+	                	if(itemstack.isItemEqual(hiddenItem)) {
+	                		itemstack = hiddenItem;
+	                		break;
+	                	}
+	                }
+		            if(!itemstack.getHasSubtypes()) {
+		            	continue recipeLoop;
+		            }
+		            addItemInOrder(allItems, itemstack);
 	            }
-	            addItemInOrder(allItems, itemstack);
-	           
 	        }
 	        TabUtils.addHiddenModItems(allItems);
 			
@@ -287,9 +287,9 @@ public class Utils {
 	public static void drawItemStack(int x, int y, ItemStack item, boolean drawOverlay) {
 		localTextureBound = false;
 		enableItemLighting();
-		Utils.itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, item, x, y);
+		itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, item, x, y);
 		if(drawOverlay) {
-			Utils.itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, item, x, y);
+			itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, item, x, y);
 		}
 	}
 	

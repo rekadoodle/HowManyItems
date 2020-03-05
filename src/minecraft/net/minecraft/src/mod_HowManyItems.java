@@ -20,27 +20,18 @@ import net.minecraft.client.Minecraft;
 public class mod_HowManyItems extends BaseMod
 {
 
+	@Override
+	public void ModsLoaded() {
+		
+	}
+	
 	//TODO
 	//UPDATE VERSION
 	//code cleanup
 	//inventory saves
 	
 	//CHANGELOG
-	//new icons
-	//now developed in own package
-	//config robusted
-	//code improved
-	//added support for better than wolves
-	//improved ic2 support, recycler + matter fabricator, ee
-	//fixed bug where tabs from next tab page were clickable
-	//fixed bug where recipe viewer 'hitboxes' were incorrectly alligned
-	//move tab page buttons to not overlap with itemlist overlay
-	//view recipes button (hold shift) now shows recipes for the relevant gui if applicable
-	//fixed a bug where having the overlay open would change the colour of the sky
-	//added generic recipe viewer textures to /hmi/icons.png for better texture pack support
-	//improved storgage efficiency of hidden item config
-	//fixed modmenu support
-	//fixed tab page buttons flickering when changing recipe viewer size
+	//fixed crash issue with minecolony
 	
 	//Use this if you are a making a mod that adds a tab
 	public static void addModTab(Tab tab) {
