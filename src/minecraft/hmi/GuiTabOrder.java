@@ -1,21 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
-package net.minecraft.src;
+package hmi;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-
-// Referenced classes of package net.minecraft.src:
-//			GuiScreen, StringTranslate, GameSettings, GuiSmallButton, 
-//			GuiButton, KeyBinding
+import hmi.tabs.Tab;
+import net.minecraft.src.*;
 
 public class GuiTabOrder extends GuiScreen
 {
@@ -37,9 +27,9 @@ public class GuiTabOrder extends GuiScreen
 
     private float initialClickY;
     private long lastClicked;
-    private ArrayList<TabRecipeViewer> allTabs;
-    private ArrayList<TabRecipeViewer> currentTabs;
-    private TabRecipeViewer[] newOrder;
+    private ArrayList<Tab> allTabs;
+    private ArrayList<Tab> currentTabs;
+    private Tab[] newOrder;
     private boolean[] tabEnabled;
 
 	public GuiTabOrder(GuiScreen guiscreen)
@@ -52,7 +42,7 @@ public class GuiTabOrder extends GuiScreen
 		slotHeight =  21;
 		currentTabs = mod_HowManyItems.getTabs();
 		allTabs = mod_HowManyItems.allTabs;
-		newOrder = new TabRecipeViewer[allTabs.size()];
+		newOrder = new Tab[allTabs.size()];
 		tabEnabled = new boolean[allTabs.size()];
 	}
 
@@ -69,8 +59,7 @@ public class GuiTabOrder extends GuiScreen
 			if(i == 0) ((GuiButton)controlList.get(controlList.size() - 1)).enabled = false;
 			controlList.add(new GuiButtonHMI(controlList.size(), -1, -1, BUTTON_HEIGHT, 4));
 			String s = currentTabs.get(i).TAB_CREATOR.getClass().getSimpleName().replaceFirst("mod_", "");
-			s += " " + (new StringBuilder()).append("- ").append(StringTranslate.getInstance().translateNamedKey(currentTabs.get(i).getTabItem().getItemName())).toString().trim();
-			s += ": Enabled";
+			s += " - " + currentTabs.get(i).name() + ": Enabled";
 			controlList.add(new GuiSmallButton(controlList.size(), -1, -1, 268, BUTTON_HEIGHT, s));
 		}
 		for(int i = 0; i < allTabs.size(); i++) {
@@ -82,27 +71,30 @@ public class GuiTabOrder extends GuiScreen
 				controlList.add(new GuiButtonHMI(controlList.size(), -1, -1, BUTTON_HEIGHT, 4));
 				((GuiButton)controlList.get(controlList.size() - 1)).enabled = false;
 				String s = allTabs.get(i).TAB_CREATOR.getClass().getSimpleName().replaceFirst("mod_", "");
-				s += " " + (new StringBuilder()).append("- ").append(StringTranslate.getInstance().translateNamedKey(allTabs.get(i).getTabItem().getItemName())).toString().trim();
-				s += ": Disabled";
+				s += " - " + allTabs.get(i).name() + ": Disabled";
 				controlList.add(new GuiSmallButton(controlList.size(), -1, -1, 268, BUTTON_HEIGHT, s));
 			}
 		}
 		if(controlList.size() >= 3) ((GuiButton)controlList.get(controlList.size() - 2)).enabled = false;
 		
 		StringTranslate stringtranslate = StringTranslate.getInstance();
-		controlList.add(new GuiSmallButton(controlList.size(), width / 2 - 154, height - 39, "Gui Size: " + (mod_HowManyItems.optionsRecipeViewerDraggableGui ? "Draggable" : "Auto")));
+		controlList.add(new GuiSmallButton(controlList.size(), width / 2 - 154, height - 39, "Gui Size: " + (Config.recipeViewerDraggableGui ? "Draggable" : "Auto")));
         controlList.add(new GuiSmallButton(controlList.size(), width / 2 + 4, height - 39, stringtranslate.translateKey("gui.done")));
 	}
+	
+	public void onGuiClosed()
+    {
+		mod_HowManyItems.tabOrderChanged(tabEnabled, newOrder);
+    }
 
 	protected void actionPerformed(GuiButton guibutton){
 		if(guibutton.id == controlList.size() - 1){
-			mod_HowManyItems.tabOrderChanged(tabEnabled, newOrder);
 			mc.displayGuiScreen(parentScreen);
 		}
 		else if(guibutton.id == controlList.size() - 2){
-			mod_HowManyItems.optionsRecipeViewerDraggableGui = !mod_HowManyItems.optionsRecipeViewerDraggableGui;
-        	guibutton.displayString = "Gui Size: " + (mod_HowManyItems.optionsRecipeViewerDraggableGui ? "Draggable" : "Auto");
-        	Gui_HMI.onSettingChanged();
+			Config.recipeViewerDraggableGui = !Config.recipeViewerDraggableGui;
+        	guibutton.displayString = "Gui Size: " + (Config.recipeViewerDraggableGui ? "Draggable" : "Auto");
+        	mod_HowManyItems.onSettingChanged();
 		}
 		else {
 			if(guibutton.id % 3 == 2) {
@@ -132,7 +124,7 @@ public class GuiTabOrder extends GuiScreen
 				boolean tempBool = tabEnabled[index];
 				tabEnabled[index] = tabEnabled[index + upOrDown];
 				tabEnabled[index + upOrDown] = tempBool;
-				TabRecipeViewer tempTab = newOrder[index];
+				Tab tempTab = newOrder[index];
 				newOrder[index] = newOrder[index + upOrDown];
 				newOrder[index + upOrDown] = tempTab;
 				String tempString = ((GuiButton)controlList.get(index * 3 + 2)).displayString;

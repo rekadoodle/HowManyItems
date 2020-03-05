@@ -1,10 +1,12 @@
-package net.minecraft.src;
+package hmi;
 
+import hmi.GuiOverlay;
 import net.java.games.input.Mouse;
+import net.minecraft.src.*;
 
-public class GuiOptions_HMI extends GuiScreen {
+public class GuiOptionsHMI extends GuiScreen {
 
-	public GuiOptions_HMI(GuiScreen guiscreen)
+	public GuiOptionsHMI(GuiScreen guiscreen)
     {
         parentScreen = guiscreen;
     }
@@ -24,12 +26,12 @@ public class GuiOptions_HMI extends GuiScreen {
 	public void initGui()
     {
         int i = -1;
-        controlList.add(buttonCheats = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Mode: " + (mod_HowManyItems.optionsCheatsEnabled ? "Cheat Mode" : "Recipe Mode")));
-        controlList.add(buttonIDs = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Item IDs: " + (mod_HowManyItems.optionsShowItemIDs ? "ON" : "OFF")));
-        controlList.add(buttonCentredSearchBar = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Centred Search Bar: " + (mod_HowManyItems.optionsCentredSearchBar ? "ON" : "OFF")));
-        controlList.add(buttonFastSearch = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Fast Search: " + (mod_HowManyItems.optionsFastSearch ? "ON" : "OFF")));
-        controlList.add(buttonHiding = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Hide Items Mode: " + (Gui_HMI.showHiddenItems ? "ON" : "OFF")));
-        controlList.add(buttonInvertedScroll = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (mod_HowManyItems.optionsScrollInverted ? "ON" : "OFF")));
+        controlList.add(buttonCheats = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode")));
+        controlList.add(buttonIDs = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Item IDs: " + (Config.showItemIDs ? "ON" : "OFF")));
+        controlList.add(buttonCentredSearchBar = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF")));
+        controlList.add(buttonFastSearch = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Fast Search: " + (Config.fastSearch ? "ON" : "OFF")));
+        controlList.add(buttonHiding = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF")));
+        controlList.add(buttonInvertedScroll = new GuiSmallButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF")));
 
         //controlList.add(new GuiButton(++i, width / 2 - 100, height / 6 + 72 + 12, "Commands & Loadout Names..."));
         controlList.add(buttonKeybinds = new GuiButton(++i, width / 2 - 100, height / 6 + 96 + 12, "Keybinds..."));
@@ -42,44 +44,44 @@ public class GuiOptions_HMI extends GuiScreen {
     {
         if(guibutton == buttonCheats)
         {
-        	mod_HowManyItems.optionsCheatsEnabled = !mod_HowManyItems.optionsCheatsEnabled;
-        	buttonCheats.displayString = "Mode: " + (mod_HowManyItems.optionsCheatsEnabled ? "Cheat Mode" : "Recipe Mode");
+        	Config.cheatsEnabled = !Config.cheatsEnabled;
+        	buttonCheats.displayString = "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode");
         }
         else if(guibutton == buttonIDs)
         {
-        	mod_HowManyItems.optionsShowItemIDs = !mod_HowManyItems.optionsShowItemIDs;
-        	buttonIDs.displayString = "Item IDs: " + (mod_HowManyItems.optionsShowItemIDs ? "ON" : "OFF");
+        	Config.showItemIDs = !Config.showItemIDs;
+        	buttonIDs.displayString = "Item IDs: " + (Config.showItemIDs ? "ON" : "OFF");
         }
         else if(guibutton == buttonCentredSearchBar)
         {
-        	mod_HowManyItems.optionsCentredSearchBar = !mod_HowManyItems.optionsCentredSearchBar;
-        	buttonCentredSearchBar.displayString = "Centred Search Bar: " + (mod_HowManyItems.optionsCentredSearchBar ? "ON" : "OFF");
+        	Config.centredSearchBar = !Config.centredSearchBar;
+        	buttonCentredSearchBar.displayString = "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF");
         }
         else if(guibutton == buttonFastSearch)
         {
-        	mod_HowManyItems.optionsFastSearch = !mod_HowManyItems.optionsFastSearch;
-        	buttonFastSearch.displayString = "Fast Search: " + (mod_HowManyItems.optionsFastSearch ? "ON" : "OFF");
+        	Config.fastSearch = !Config.fastSearch;
+        	buttonFastSearch.displayString = "Fast Search: " + (Config.fastSearch ? "ON" : "OFF");
         }
         else if(guibutton == buttonHiding)
         {
-        	Gui_HMI.showHiddenItems = !Gui_HMI.showHiddenItems;
-        	Gui_HMI.resetItems();
-        	buttonHiding.displayString = "Hide Items Mode: " + (Gui_HMI.showHiddenItems ? "ON" : "OFF");
+        	GuiOverlay.showHiddenItems = !GuiOverlay.showHiddenItems;
+        	GuiOverlay.resetItems();
+        	buttonHiding.displayString = "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF");
         }
         else if(guibutton == buttonInvertedScroll)
         {
-        	mod_HowManyItems.optionsScrollInverted = !mod_HowManyItems.optionsScrollInverted;
-        	buttonInvertedScroll.displayString = "Flip Scroll Direction: " + (mod_HowManyItems.optionsScrollInverted ? "ON" : "OFF");
+        	Config.scrollInverted = !Config.scrollInverted;
+        	buttonInvertedScroll.displayString = "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF");
         }
         else if(guibutton == buttonDone)
         {
-        	Gui_HMI.guiClosedCooldown = System.currentTimeMillis() + 100L;
+        	GuiOverlay.guiClosedCooldown = System.currentTimeMillis() + 100L;
             mc.displayGuiScreen(parentScreen);
             return;
         }
         else if(guibutton == buttonKeybinds)
         {
-            mc.displayGuiScreen(new GuiControls_HMI(this));
+            mc.displayGuiScreen(new GuiControlsHMI(this));
             return;
         }
         else if(guibutton == buttonTabOrder)
@@ -87,7 +89,7 @@ public class GuiOptions_HMI extends GuiScreen {
             mc.displayGuiScreen(new GuiTabOrder(this));
             return;
         }
-        Gui_HMI.onSettingChanged();
+        mod_HowManyItems.onSettingChanged();
     }
 	
 	public void drawScreen(int posX, int posY, float f)

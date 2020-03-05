@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package hmi.tabs;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,18 +7,22 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import buildcraft.factory.GuiAutoCrafting;
+import hmi.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.*;
 
-public class TabRecipeViewerCrafting extends TabRecipeViewer {
+public class TabCrafting extends TabWithTexture {
 
 	protected List recipesComplete;
 	protected List recipes;
 	private int slotsWidth;
 	protected BaseMod mod;
+	private Block tabBlock;
+	private boolean isVanillaWorkbench = false; //THIS IS LAZY
+	public ArrayList<Class<? extends GuiContainer>> guiCraftingStations = new ArrayList<Class<? extends GuiContainer>>();
 	
-	public TabRecipeViewerCrafting(BaseMod tabCreator) {
-		this(tabCreator, 10, "/gui/crafting.png", 118, 56, 28, 15, 56, 46, 3);
-		recipesComplete = new ArrayList(CraftingManager.getInstance().getRecipeList());
+	public TabCrafting(BaseMod tabCreator) {
+		this(tabCreator, new ArrayList(CraftingManager.getInstance().getRecipeList()), Block.workbench);
 		for (int i = 0; i < recipesComplete.size(); i++) {
 			//Removes recipes that are too big and ruin everything @flans mod
 			if(((IRecipe)recipesComplete.get(i)).getRecipeSize() > 9)
@@ -27,12 +31,20 @@ public class TabRecipeViewerCrafting extends TabRecipeViewer {
 				i-=1;
             }
     	}
+		isVanillaWorkbench = true;
+		guiCraftingStations.add(GuiCrafting.class);
+	}
+	
+	public TabCrafting(BaseMod tabCreator, List recipesComplete, Block tabBlock) {
+		this(tabCreator, 10, recipesComplete, tabBlock, "/gui/crafting.png", 118, 56, 28, 15, 56, 46, 3);
 		slots[0] = new Integer[]{96, 23};
 	}
 
-	public TabRecipeViewerCrafting(BaseMod tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
+	public TabCrafting(BaseMod tabCreator, int slotsPerRecipe, List recipesComplete, Block tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
 		super(tabCreator, slotsPerRecipe, texturePath, width, height, 3, 4, textureX, textureY, buttonX, buttonY);
 		this.slotsWidth = slotsWidth;
+		this.recipesComplete = recipesComplete;
+		this.tabBlock = tabBlock;
 		recipes = recipesComplete;
 		int i = 1;
 		for(int l = 0; l < 3; l++) {
@@ -40,6 +52,7 @@ public class TabRecipeViewerCrafting extends TabRecipeViewer {
 				slots[i++] = new Integer[]{2 + i1 * 18, 5 + l * 18};
 			}
 		}
+		equivalentCraftingStations.add(getTabItem());
 	}
 	
 	public ItemStack[][] getItems(int index, ItemStack filter) {
@@ -193,31 +206,27 @@ public class TabRecipeViewerCrafting extends TabRecipeViewer {
         }
         recipes = arraylist;
     	}
+    	size = recipes.size();
     	super.updateRecipes(filter, getUses);
+    	size = recipes.size();
 	}
 
 	public ItemStack getTabItem() {
-		return new ItemStack(Block.workbench);
+		return new ItemStack(tabBlock);
 	}
-
-	public int size() {
-		if (recipes != null) return recipes.size();
-		return 0;
-	}
-
+	
 	public Boolean drawSetupRecipeButton(GuiScreen parent, ItemStack[] recipeItems) {
-		if (parent instanceof GuiCrafting) return true;
-		if (mod_HowManyItems.buildcraftFactoryInstalled && parent instanceof GuiAutoCrafting) return true;
-		if (parent instanceof GuiInventory || parent == null) {
+		for(Class<? extends GuiContainer> gui : guiCraftingStations) {
+			if(gui.isInstance(parent)) return true;
+		}
+		if (isVanillaWorkbench && (parent instanceof GuiInventory || parent == null)) {
 			for (int i = 3; i < 10; i++) {
 				if (i != 4 && i != 5 && recipeItems[i] != null)
 					return false;
 			}
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	public Boolean[] itemsInInventory(GuiScreen parent, ItemStack[] recipeItems) {
@@ -226,7 +235,7 @@ public class TabRecipeViewerCrafting extends TabRecipeViewer {
 		if (parent instanceof GuiContainer)
 			list = ((GuiContainer)parent).inventorySlots.slots;
 		else
-			list = ModLoader.getMinecraftInstance().thePlayer.inventorySlots.slots;
+			list = Utils.mc.thePlayer.inventorySlots.slots;
         ItemStack aslot[] = new ItemStack[list.size()];
         for(int i = 0; i < list.size(); i++)
         {
@@ -308,15 +317,14 @@ public class TabRecipeViewerCrafting extends TabRecipeViewer {
 	public void setupRecipe(GuiScreen parent, ItemStack[] recipeItems) {
 		List list;
 		if (parent == null) {
-			Minecraft mc = ModLoader.getMinecraftInstance();
-			mc.setIngameNotInFocus();
-			ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+			Utils.mc.setIngameNotInFocus();
+			ScaledResolution scaledresolution = new ScaledResolution(Utils.mc.gameSettings, Utils.mc.displayWidth, Utils.mc.displayHeight);
 			int i = scaledresolution.getScaledWidth();
 			int j = scaledresolution.getScaledHeight();
-			parent = new GuiInventory(mc.thePlayer);
-			mc.currentScreen = parent;
-			parent.setWorldAndResolution(mc, i, j);
-			mc.skipRenderWorld = false;
+			parent = new GuiInventory(Utils.mc.thePlayer);
+			Utils.mc.currentScreen = parent;
+			parent.setWorldAndResolution(Utils.mc, i, j);
+			Utils.mc.skipRenderWorld = false;
 			//ModLoader.getMinecraftInstance().displayGuiScreen(parent);
 		}
 		list = ((GuiContainer)parent).inventorySlots.slots;

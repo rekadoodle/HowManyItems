@@ -1,14 +1,17 @@
-package net.minecraft.src;
+package hmi.tabs.mods;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TabRecipeViewerAether extends TabRecipeViewerFurnace {
+import hmi.tabs.TabSmelting;
+import net.minecraft.src.*;
+
+public class TabAether extends TabSmelting {
 
 	private List recipesComplete;
 	
-	public TabRecipeViewerAether(BaseMod tabCreator, Class class1, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock) {
+	public TabAether(BaseMod tabCreator, Class class1, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock) {
 		super(tabCreator, null, fuels, texturePath, tabBlock);
 		try {
 			recipesComplete = (List)ModLoader.getPrivateValue(class1, null, 0);
@@ -68,10 +71,11 @@ public class TabRecipeViewerAether extends TabRecipeViewerFurnace {
             }
 			
 		}
-		if (size() == 0 && ( getUses
+		if (recipes.size() == 0 && ( getUses
 				&& filter.itemID == getTabItem().itemID && filter.getItemDamage() == getTabItem().getItemDamage())){
     		updateRecipes(null, getUses);
 		}
+		size = recipes.size();
 	}
 	
 }

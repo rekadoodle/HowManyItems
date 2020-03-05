@@ -2,8 +2,9 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-package net.minecraft.src;
+package hmi;
 
+import net.minecraft.src.*;
 
 // Referenced classes of package net.minecraft.src:
 //            Container, IInventory, Slot, EntityPlayer, 

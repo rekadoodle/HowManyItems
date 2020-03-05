@@ -1,12 +1,15 @@
-package net.minecraft.src;
+package hmi.tabs.mods;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class TabRecipeViewerIC2CanningMachine extends TabRecipeViewerFurnace {
+import hmi.tabs.TabSmelting;
+import net.minecraft.src.*;
 
-	public TabRecipeViewerIC2CanningMachine(BaseMod tabCreator, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock, int metadata) {
+public class TabIC2CanningMachine extends TabSmelting {
+
+	public TabIC2CanningMachine(BaseMod tabCreator, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock, int metadata) {
 		super(tabCreator, 4, new HashMap(), fuels, texturePath, 113, 56, 28, 15, tabBlock, metadata);
 		recipesComplete.put(mod_IC2.itemFuelCanEmpty.shiftedIndex, new ItemStack(mod_IC2.itemFuelCan));
 		recipesComplete.put(mod_IC2.itemArmorJetpack.shiftedIndex, new ItemStack(mod_IC2.itemArmorJetpack));
@@ -14,7 +17,7 @@ public class TabRecipeViewerIC2CanningMachine extends TabRecipeViewerFurnace {
 			int i;
 			if(item != null && item instanceof ItemFood 
 					&& (i = (int)Math.ceil((double)((ItemFood)item).getHealAmount() / 2D)) > 0) 
-				recipesComplete.put(item.shiftedIndex,  new ItemStack(mod_IC2.itemTinCanFilled, 1, i));
+				recipesComplete.put(item.shiftedIndex,  new ItemStack(mod_IC2.itemTinCanFilled, i));
 		}
 		slots[0] = new Integer[]{91, 23};
 		slots[1] = new Integer[]{41, 5};

@@ -1,4 +1,6 @@
-package net.minecraft.src;
+package hmi;
+
+import net.minecraft.src.*;
 
 public class GuiTextFieldHMI extends GuiTextField {
 

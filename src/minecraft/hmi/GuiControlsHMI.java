@@ -1,10 +1,13 @@
-package net.minecraft.src;
+package hmi;
 
 import org.lwjgl.input.Keyboard;
 
-public class GuiControls_HMI extends GuiScreen {
+import hmi.GuiOverlay;
+import net.minecraft.src.*;
 
-	public GuiControls_HMI(GuiScreen guiscreen)
+public class GuiControlsHMI extends GuiScreen {
+
+	public GuiControlsHMI(GuiScreen guiscreen)
     {
         parentScreen = guiscreen;
     }
@@ -53,9 +56,9 @@ public class GuiControls_HMI extends GuiScreen {
         if(buttonId >= 0)
         {
         	if(i == 1) i = 0;
-        	if(binds[buttonId] == mod_HowManyItems.toggleOverlay) {
+        	if(binds[buttonId] == Config.toggleOverlay) {
         		for (int j = 0; j < mc.gameSettings.keyBindings.length; j++) {
-        			if(mc.gameSettings.keyBindings[j] == mod_HowManyItems.toggleOverlay) {
+        			if(mc.gameSettings.keyBindings[j] == Config.toggleOverlay) {
         				mc.gameSettings.setKeyBinding(j, i);
         			}
         		}
@@ -63,7 +66,7 @@ public class GuiControls_HMI extends GuiScreen {
             binds[buttonId].keyCode = i;
             ((GuiButton)controlList.get(buttonId)).displayString = Keyboard.getKeyName(i);
             buttonId = -1;
-            Gui_HMI.onSettingChanged();
+            mod_HowManyItems.onSettingChanged();
         } else
         {
             super.keyTyped(c, i);
@@ -83,7 +86,7 @@ public class GuiControls_HMI extends GuiScreen {
              buttonId = guibutton.id;
              guibutton.displayString = (new StringBuilder()).append("> ").append(Keyboard.getKeyName(binds[guibutton.id].keyCode)).append(" <").toString();
         }
-        Gui_HMI.onSettingChanged();
+         mod_HowManyItems.onSettingChanged();
     }
 	
 	public void drawScreen(int i, int j, float f)
@@ -100,13 +103,13 @@ public class GuiControls_HMI extends GuiScreen {
     }
 	
 	private static KeyBinding[] binds = { 
-			mod_HowManyItems.pushRecipe, 
-			mod_HowManyItems.pushUses, 
-			mod_HowManyItems.prevRecipe, 
-			mod_HowManyItems.allRecipes, 
-			mod_HowManyItems.clearSearchBox, 
-			mod_HowManyItems.focusSearchBox,
-			mod_HowManyItems.toggleOverlay
+			Config.pushRecipe, 
+			Config.pushUses, 
+			Config.prevRecipe, 
+			Config.allRecipes, 
+			Config.clearSearchBox, 
+			Config.focusSearchBox,
+			Config.toggleOverlay
 			};
 	
 	private GuiScreen parentScreen;

@@ -2,13 +2,17 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-package net.minecraft.src;
+package hmi;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.logging.Logger;
+
+import hmi.tabs.Tab;
+import hmi.tabs.TabWithTexture;
+import net.minecraft.src.*;
 
 // Referenced classes of package net.minecraft.src:
 //            IInventory, CraftingManager, ModLoader, ItemStack, 
@@ -24,7 +28,7 @@ public class InventoryRecipeViewer
 		
     }
     
-    public void initTab(TabRecipeViewer tab) {
+    public void initTab(Tab tab) {
     	currentTab = tab;
     	newList = true;
     	index = setIndex(tab.lastIndex);
@@ -51,22 +55,22 @@ public class InventoryRecipeViewer
         {
             return i;
         }
-        if (!((double)currentTab.size()/currentTab.recipesPerPage > 1)) {
+        if (!((double)currentTab.size/currentTab.recipesPerPage > 1)) {
         	i = 0;
     	}
         newList = false;
         if(i < 0)
         {
-        	if (currentTab.size() % currentTab.recipesPerPage != 0)
-        		i = currentTab.size() - (currentTab.size() % currentTab.recipesPerPage);
+        	if (currentTab.size % currentTab.recipesPerPage != 0)
+        		i = currentTab.size - (currentTab.size % currentTab.recipesPerPage);
         	else
-        		i = currentTab.size() - currentTab.recipesPerPage;
+        		i = currentTab.size - currentTab.recipesPerPage;
         	if (i == -1)
         		i = 0;
-        	if (i == currentTab.size())
-        		i = currentTab.size() - 1;
+        	if (i == currentTab.size)
+        		i = currentTab.size - 1;
         } else
-        if(i >= currentTab.size())
+        if(i >= currentTab.size)
         {
             i = 0;
         }
@@ -95,7 +99,7 @@ public class InventoryRecipeViewer
     public String getInvName()
     {
         return String.format("%d / %d", new Object[] {
-            getPage() + 1, Integer.valueOf((currentTab.size() - 1) / currentTab.recipesPerPage) + 1
+            getPage() + 1, Integer.valueOf((currentTab.size - 1) / currentTab.recipesPerPage) + 1
         });
     }
 
@@ -115,10 +119,10 @@ public class InventoryRecipeViewer
     public void onInventoryChanged() { }
     
     public Stack<ItemStack> filter = new Stack<ItemStack>(); 
-    public Stack<TabRecipeViewer> prevTabs = new Stack<TabRecipeViewer>(); 
+    public Stack<Tab> prevTabs = new Stack<Tab>(); 
     public Stack<Integer> prevPages = new Stack<Integer>(); 
     public Stack<Boolean> prevGetUses = new Stack<Boolean>();
-    public TabRecipeViewer currentTab = mod_HowManyItems.getTabs().get(0);
+    public Tab currentTab = mod_HowManyItems.getTabs().get(0);
     
     public Boolean newList = false;
     //protected ItemStack filter;

@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package hmi.tabs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class TabRecipeViewerFurnace extends TabRecipeViewer {
+import net.minecraft.src.*;
+
+public class TabSmelting extends TabWithTexture {
 
 	protected Map recipesComplete;
 	protected ArrayList<ItemStack[]> recipes = new ArrayList<ItemStack[]>();
@@ -15,7 +17,7 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 	private int metadata;
 	private boolean damagedFurnaceInput = false;
 	
-	public TabRecipeViewerFurnace(BaseMod tabCreator) {
+	public TabSmelting(BaseMod tabCreator) {
 		this(tabCreator, new HashMap(), new ArrayList<ItemStack>(), "/gui/furnace.png", Block.stoneOvenIdle);
 		
 		recipesComplete = FurnaceRecipes.smelting().getSmeltingList();
@@ -46,22 +48,22 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
         }
 	}
 	
-	public TabRecipeViewerFurnace(BaseMod tabCreator, Map recipes, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock) {
+	public TabSmelting(BaseMod tabCreator, Map recipes, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock) {
 		this(tabCreator, recipes, fuels, texturePath, tabBlock, 0);
 	}
 	
-	public TabRecipeViewerFurnace(BaseMod tabCreator, Map recipes, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock, int metadata) {
+	public TabSmelting(BaseMod tabCreator, Map recipes, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock, int metadata) {
 		this(tabCreator, 3, recipes, fuels, texturePath, 84, 56, 54, 15, tabBlock, metadata);
 	}
 	
-	public TabRecipeViewerFurnace(BaseMod tabCreator, int slotsPerRecipe, Map recipes, ArrayList<ItemStack> fuels, String texturePath, int width, int height, int textureX, int textureY, Block tabBlock, int metadata) {
+	public TabSmelting(BaseMod tabCreator, int slotsPerRecipe, Map recipes, ArrayList<ItemStack> fuels, String texturePath, int width, int height, int textureX, int textureY, Block tabBlock, int metadata) {
 		this(tabCreator, slotsPerRecipe, texturePath, width, height, textureX, textureY, tabBlock, metadata);
 		
 		this.recipesComplete = recipes;
 		this.fuels = fuels;
 	}
 	
-	public TabRecipeViewerFurnace(BaseMod tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int textureX, int textureY, Block tabBlock, int metadata) {
+	public TabSmelting(BaseMod tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int textureX, int textureY, Block tabBlock, int metadata) {
 		super(tabCreator, slotsPerRecipe, texturePath, width, height, 3, 3, textureX, textureY);
 		
 		this.tabBlock = tabBlock;
@@ -69,7 +71,9 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 		
 		slots[0] = new Integer[]{62, 23};
 		slots[1] = new Integer[]{2, 5};
+		if(slotsPerRecipe > 2)
 		slots[2] = new Integer[]{2, 41};
+		equivalentCraftingStations.add(getTabItem());
 	}
 
 	public ItemStack[][] getItems(int index, ItemStack filter) {
@@ -83,7 +87,7 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
             	ItemStack[] recipe = (ItemStack[])recipes.get(k);
             	for (int i = 0; i < recipe.length; i++) {
             		items[j][i] = recipe[i];
-            		if (recipe[i].getItemDamage() == -1) {
+            		if (recipe[i] != null && recipe[i].getItemDamage() == -1) {
                     	if (recipe[i].getHasSubtypes()) {
                     		if (filter != null && recipe[i].itemID == filter.itemID) {
                     			items[j][i] = new ItemStack(recipe[i].getItem(), 0, filter.getItemDamage());
@@ -97,8 +101,9 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
                     	}
                     }
             	}
-                
-                items[j][2] = fuels.get(rand.nextInt(fuels.size()));
+                if(fuels != null) {
+                    items[j][2] = fuels.get(rand.nextInt(fuels.size()));
+                }
              }
 
             if(items[j][0] == null && recipesOnThisPage > j) {
@@ -127,38 +132,38 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 			if (filter != null) dmg = filter.getItemDamage();
 			
 			ItemStack output = (ItemStack)(recipesComplete.get(obj));
-			ItemStack input;
-			if ((Integer)obj < Block.blocksList.length) {
-				if(Block.blocksList[(Integer)obj] == null) continue;
-				input = new ItemStack(Block.blocksList[(Integer)obj], 1, dmg);
-			}
-			else {
-				if((Integer)obj < Item.itemsList.length)
-				input = new ItemStack(Item.itemsList[(Integer)obj], 1, dmg);
-				//fix for tmim's mods
-				else if(damagedFurnaceInput && (Integer)obj - (output.getItemDamage() << 16) < Block.blocksList.length){
-					if(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)] == null) continue;
-					input = new ItemStack(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)], 1, output.getItemDamage());
+			ItemStack input = null;
+			if(obj != null) {
+				if ((Integer)obj < Block.blocksList.length) {
+					if(Block.blocksList[(Integer)obj] == null) continue;
+					input = new ItemStack(Block.blocksList[(Integer)obj], 1, dmg);
 				}
-				else continue;
+				else {
+					if((Integer)obj < Item.itemsList.length)
+					input = new ItemStack(Item.itemsList[(Integer)obj], 1, dmg);
+					//fix for tmim's mods
+					else if(damagedFurnaceInput && (Integer)obj - (output.getItemDamage() << 16) < Block.blocksList.length){
+						if(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)] == null) continue;
+						input = new ItemStack(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)], 1, output.getItemDamage());
+					}
+					else continue;
+				}
 			}
 			if(filter == null ||
-					(getUses && input.itemID == filter.itemID ) ||
+					(getUses && input != null && input.itemID == filter.itemID ) ||
 					(!getUses && output.itemID == filter.itemID && (output.getItemDamage() == filter.getItemDamage() || output.getItemDamage() < 0 || !output.getHasSubtypes())))
 			{
 				recipes.add(new ItemStack[]{output, input});
             }
 			
 		}
+		size = recipes.size();
 		super.updateRecipes(filter, getUses);
+    	size = recipes.size();
 	}
 
 	public ItemStack getTabItem() {
 		return new ItemStack(tabBlock, 1, metadata);
-	}
-
-	public int size() {
-		return recipes.size();
 	}
 	
 	protected Random rand = new Random();
