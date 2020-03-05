@@ -8,14 +8,14 @@ import java.util.Map;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import hmi.*;
-import hmi.tabs.*;
-import hmi.tabs.mods.*;
 import ic2.ItemBattery;
 import ic2.TileEntityCompressor;
 import ic2.TileEntityExtractor;
 import ic2.TileEntityMacerator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.hmi.*;
+import net.minecraft.src.hmi.tabs.*;
+import net.minecraft.src.hmi.tabs.mods.*;
 
 public class mod_HowManyItems extends BaseMod
 {

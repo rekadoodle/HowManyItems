@@ -1,11 +1,11 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import hmi.tabs.Tab;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.tabs.Tab;
 
 public class GuiTabOrder extends GuiScreen
 {

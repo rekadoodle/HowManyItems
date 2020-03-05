@@ -1,11 +1,11 @@
-package hmi.tabs.mods;
+package net.minecraft.src.hmi.tabs.mods;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import hmi.tabs.TabSmelting;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.tabs.TabSmelting;
 
 public class TabAether extends TabSmelting {
 

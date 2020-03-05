@@ -1,4 +1,4 @@
-package hmi.tabs;
+package net.minecraft.src.hmi.tabs;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +7,9 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import buildcraft.factory.GuiAutoCrafting;
-import hmi.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.Utils;
 
 public class TabCrafting extends TabWithTexture {
 

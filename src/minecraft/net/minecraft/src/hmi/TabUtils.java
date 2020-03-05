@@ -1,4 +1,4 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import buildcraft.factory.*;
-import hmi.tabs.*;
-import hmi.tabs.mods.*;
 import ic2.*;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.tabs.*;
+import net.minecraft.src.hmi.tabs.mods.*;
 
 public class TabUtils {
 

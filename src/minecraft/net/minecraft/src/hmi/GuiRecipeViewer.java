@@ -2,7 +2,7 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-package hmi;
+package net.minecraft.src.hmi;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -12,10 +12,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import hmi.tabs.Tab;
-import hmi.tabs.TabWithTexture;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.tabs.Tab;
+import net.minecraft.src.hmi.tabs.TabWithTexture;
 
 // Referenced classes of package net.minecraft.src:
 //            GuiContainer, CraftingInventoryRecipeBookCB, InventoryRecipeBook, FontRenderer, 

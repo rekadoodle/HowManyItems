@@ -1,4 +1,4 @@
-package hmi.tabs;
+package net.minecraft.src.hmi.tabs;
 
 import java.util.ArrayList;
 import java.util.HashMap;

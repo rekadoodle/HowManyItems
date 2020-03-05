@@ -1,4 +1,4 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;

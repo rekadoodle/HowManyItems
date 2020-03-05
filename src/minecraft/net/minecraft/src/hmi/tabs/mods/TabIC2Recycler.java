@@ -1,12 +1,12 @@
-package hmi.tabs.mods;
+package net.minecraft.src.hmi.tabs.mods;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import hmi.Utils;
-import hmi.tabs.TabSmelting;
 import ic2.TileEntityRecycler;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.Utils;
+import net.minecraft.src.hmi.tabs.TabSmelting;
 
 public class TabIC2Recycler extends TabSmelting {
 

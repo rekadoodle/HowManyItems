@@ -1,10 +1,10 @@
-package hmi.tabs;
+package net.minecraft.src.hmi.tabs;
 
 import org.lwjgl.opengl.GL11;
 
-import hmi.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.Utils;
 
 public abstract class TabWithTexture extends Tab {
 

@@ -2,7 +2,7 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-package hmi;
+package net.minecraft.src.hmi;
 
 import net.minecraft.src.*;
 

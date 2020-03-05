@@ -1,9 +1,9 @@
-package hmi.tabs.mods;
+package net.minecraft.src.hmi.tabs.mods;
 
 import java.util.Map;
 
-import hmi.Utils;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.Utils;
 
 public class TabBTWCauldron extends TabGenericBlock {
 	

@@ -1,9 +1,9 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import org.lwjgl.input.Keyboard;
 
-import hmi.GuiOverlay;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.GuiOverlay;
 
 public class GuiControlsHMI extends GuiScreen {
 

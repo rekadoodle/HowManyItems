@@ -2,7 +2,7 @@
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-package hmi;
+package net.minecraft.src.hmi;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Stack;
 import java.util.logging.Logger;
 
-import hmi.tabs.Tab;
-import hmi.tabs.TabWithTexture;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.tabs.Tab;
+import net.minecraft.src.hmi.tabs.TabWithTexture;
 
 // Referenced classes of package net.minecraft.src:
 //            IInventory, CraftingManager, ModLoader, ItemStack, 

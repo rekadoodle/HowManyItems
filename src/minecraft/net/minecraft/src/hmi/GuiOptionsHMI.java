@@ -1,8 +1,8 @@
-package hmi;
+package net.minecraft.src.hmi;
 
-import hmi.GuiOverlay;
 import net.java.games.input.Mouse;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.GuiOverlay;
 
 public class GuiOptionsHMI extends GuiScreen {
 

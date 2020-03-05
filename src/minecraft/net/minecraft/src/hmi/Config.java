@@ -1,4 +1,4 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,11 +9,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import org.lwjgl.input.Keyboard;
 
-import hmi.tabs.Tab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.mod_HowManyItems;
+import net.minecraft.src.hmi.tabs.Tab;
 
 public class Config {
 

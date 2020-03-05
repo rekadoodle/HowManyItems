@@ -1,11 +1,11 @@
-package hmi.tabs.mods;
+package net.minecraft.src.hmi.tabs.mods;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import hmi.tabs.TabSmelting;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.tabs.TabSmelting;
 
 public class TabIC2CanningMachine extends TabSmelting {
 

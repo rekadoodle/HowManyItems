@@ -48,8 +48,8 @@ hs_err_pid*
 /src/minecraft/*
 /src/minecraft_server/*
 !/src/minecraft/net
-!/src/minecraft/hmi
 /src/minecraft/net/minecraft/*
 !/src/minecraft/net/minecraft/src
 /src/minecraft/net/minecraft/src/*
 !/src/minecraft/net/minecraft/src/mod_HowManyItems.java
+!/src/minecraft/net/minecraft/src/hmi

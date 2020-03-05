@@ -1,4 +1,4 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import net.minecraft.src.*;
 

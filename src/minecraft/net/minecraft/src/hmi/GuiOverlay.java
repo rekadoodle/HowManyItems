@@ -1,4 +1,4 @@
-package hmi;
+package net.minecraft.src.hmi;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
