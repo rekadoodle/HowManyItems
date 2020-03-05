@@ -36,7 +36,7 @@ public class mod_HowManyItems extends BaseMod
 
 	public String Version()
     {
-        return "v4.1.0_2";
+        return "v4.1.0_3";
     }
 	
 	public String Description() {
@@ -53,7 +53,6 @@ public class mod_HowManyItems extends BaseMod
 	
 	public mod_HowManyItems()
     {
-		thisMod = this;
 		if (!configFile.exists())
 			writeConfig();
 		readConfig();
@@ -64,9 +63,6 @@ public class mod_HowManyItems extends BaseMod
     }
 	
 	public static Gui_HMI hmi;
-	public static boolean dontRender = false;
-	private static BaseMod thisMod;
-	private int lastMouseButtonPressed = -1;
 	
 	public boolean OnTickInGUI(Minecraft mc, GuiScreen guiscreen) {
 		if(guiscreen instanceof GuiContainer || guiscreen instanceof Gui_HMI) {
@@ -93,7 +89,7 @@ public class mod_HowManyItems extends BaseMod
 		            int j = scaledresolution.getScaledHeight();
 		            int posX = (Mouse.getX() * i) / mc.displayWidth;
 		            int posY = j - (Mouse.getY() * j) / mc.displayHeight - 1;
-		            if(!dontRender) hmi.drawScreen(posX, posY);
+		            hmi.drawScreen(posX, posY);
 		            if(hmi.mouseOverUI(mc, posX, posY)) {
 		            	for(; Mouse.next(); hmi.handleMouseInput()) { }
 		            }
@@ -110,7 +106,6 @@ public class mod_HowManyItems extends BaseMod
 					hmi.modTickKeyPress = false;
 				}
 			}
-			dontRender = false;
 			
 			if(Keyboard.isKeyDown(pushRecipe.keyCode) || Keyboard.isKeyDown(pushUses.keyCode)) {
 				if(!keyHeldLastTick) {
@@ -273,66 +268,74 @@ public class mod_HowManyItems extends BaseMod
 		}
 	}
     
-    public static ArrayList<TabRecipeViewer> getTabs() {
-		if (allTabs == null) {
-			allTabs = new ArrayList<TabRecipeViewer>();
-			allTabs.add(new TabRecipeViewerCrafting(thisMod));
-			allTabs.add(new TabRecipeViewerFurnace(thisMod));
-			
-			List modList = ModLoader.getLoadedMods();
-			for (Object obj : modList) {
-				BaseMod mod = (BaseMod)obj;
-				ArrayList<ItemStack> fuels = new ArrayList<ItemStack>();
-				if (mod.getClass().getName() == "mod_Planes") {
-					allTabs.add(new TabRecipeViewerPlanes(thisMod));
-					continue;
-				}
-				if (mod.getClass().getName() == "mod_Uranium") {
-					fuels.add(new ItemStack (mod_Uranium.uraniumDust));
-					fuels.add(new ItemStack (mod_Uranium.uraniumCoal));
-					fuels.add(new ItemStack (mod_Uranium.skullUranium));
-					for(Block block: Block.blocksList) {
-						if(block != null && ModLoader.AddAllFuel(block.blockID) > 0) 
-							fuels.add(new ItemStack(block));
-							
-					}
-					for(Item item: Item.itemsList) {
-						if(item != null && ModLoader.AddAllFuel(item.shiftedIndex) > 0) fuels.add(new ItemStack(item));
-					}
-					allTabs.add(new TabRecipeViewerFurnace(thisMod, ReactorRecipes.smelting().getSmeltingList(), fuels, "/uraniumTextures/reactorgui.png", mod_Uranium.reactorIdle));
-					continue;
-				}
-				if (mod.getClass().getName() == "mod_IC2") {
-					fuels.add(new ItemStack(Item.redstone));
-					fuels.add(new ItemStack(mod_IC2.itemBatSU));
-					for(Item item: Item.itemsList) {
-						if(item != null && item instanceof ItemBattery) fuels.add(new ItemStack(item));
-					}
-					Block machine = mod_IC2.blockMachine;
-					allTabs.add(new TabRecipeViewerFurnace(thisMod, TileEntityMacerator.recipes, fuels, "/IC2sprites/GUIMacerator.png", machine, 3));
-					allTabs.add(new TabRecipeViewerFurnace(thisMod, TileEntityExtractor.recipes, fuels, "/IC2sprites/GUIExtractor.png", machine, 4));
-					allTabs.add(new TabRecipeViewerFurnace(thisMod, TileEntityCompressor.recipes, fuels, "/IC2sprites/GUICompressor.png", machine, 5));
-					allTabs.add(new TabRecipeViewerIC2CanningMachine(thisMod, fuels, "/IC2sprites/GUICanner.png", machine, 6));
-					continue;
-				}
-				if (mod.getClass().getName() == "mod_Aether") {
-					allTabs.add(new TabRecipeViewerAether(thisMod, TileEntityEnchanter.class, new ArrayList<ItemStack>(Arrays.asList(new ItemStack(AetherItems.AmbrosiumShard))), "/aether/gui/enchanter.png", AetherBlocks.Enchanter));
-					try
-			        {
-						Class.forName("TileEntityFreezer");
-						allTabs.add(new TabRecipeViewerAether(thisMod, TileEntityFreezer.class, new ArrayList<ItemStack>(Arrays.asList(new ItemStack(AetherBlocks.Icestone))), "/aether/gui/enchanter.png", AetherBlocks.Freezer));
-					} catch (ClassNotFoundException e) { }
-					continue;
-				}
-				if (mod.getClass().getName() == "mod_BuildCraftFactory") {
-					buildcraftFactoryInstalled = true;
-					continue;
-				}
-			}
-			for(TabRecipeViewer tab : modTabs) {
-				allTabs.add(tab);
-			}
+	public void ModsLoaded() {
+		allTabs = new ArrayList<TabRecipeViewer>();
+		allTabs.add(new TabRecipeViewerCrafting(this));
+		allTabs.add(new TabRecipeViewerFurnace(this));
+		
+		if(ModLoader.isModLoaded("mod_Planes")) {
+			allTabs.add(new TabRecipeViewerPlanes(this));
 		}
+
+		if(ModLoader.isModLoaded("mod_Uranium")) {
+			ArrayList<ItemStack> fuels = new ArrayList<ItemStack>();
+			fuels.add(new ItemStack (mod_Uranium.uraniumDust));
+			fuels.add(new ItemStack (mod_Uranium.uraniumCoal));
+			fuels.add(new ItemStack (mod_Uranium.skullUranium));
+			for(Block block: Block.blocksList) {
+				if(block != null && ModLoader.AddAllFuel(block.blockID) > 0) 
+					fuels.add(new ItemStack(block));
+			}
+			for(Item item: Item.itemsList) {
+				if(item != null && ModLoader.AddAllFuel(item.shiftedIndex) > 0) fuels.add(new ItemStack(item));
+			}
+			allTabs.add(new TabRecipeViewerFurnace(this, ReactorRecipes.smelting().getSmeltingList(), fuels, "/uraniumTextures/reactorgui.png", mod_Uranium.reactorIdle));
+		}
+		if(ModLoader.isModLoaded("mod_IndustrialCraft")) {
+			ArrayList<ItemStack> fuels = new ArrayList<ItemStack>();
+			fuels.add(new ItemStack(Item.redstone));
+			fuels.add(new ItemStack(mod_IndustrialCraft.akkuFull));
+			fuels.add(new ItemStack(mod_IndustrialCraft.itemOneBattery));
+			
+			try {
+				allTabs.add(new TabRecipeViewerFurnace(this, (Map)ModLoader.getPrivateValue(MaceratorRecipes.class, MaceratorRecipes.smelting(), "smeltingList"), fuels, "/IndustrialSprites/MaceratorGUI.png", mod_IndustrialCraft.blockMaceratorOff));
+				allTabs.add(new TabRecipeViewerFurnace(this, (Map)ModLoader.getPrivateValue(ExtractorRecipes.class, ExtractorRecipes.smelting(), "smeltingList"), fuels, "/IndustrialSprites/ExtractorGUI.png", mod_IndustrialCraft.blockExtractorOff));
+				allTabs.add(new TabRecipeViewerFurnace(this, (Map)ModLoader.getPrivateValue(CompressorRecipes.class, CompressorRecipes.smelting(), "smeltingList"), fuels, "/IndustrialSprites/CompressorGUI.png", mod_IndustrialCraft.blockCompressorOff));
+			} 
+			catch (IllegalArgumentException e) { e.printStackTrace(); } 
+			catch (NoSuchFieldException e) { e.printStackTrace(); }
+		}
+		if(ModLoader.isModLoaded("mod_IC2")) {
+			ArrayList<ItemStack> fuels = new ArrayList<ItemStack>();
+			fuels.add(new ItemStack(Item.redstone));
+			fuels.add(new ItemStack(mod_IC2.itemBatSU));
+			for(Item item: Item.itemsList) {
+				if(item != null && item instanceof ItemBattery) fuels.add(new ItemStack(item));
+			}
+			Block machine = mod_IC2.blockMachine;
+			allTabs.add(new TabRecipeViewerFurnace(this, TileEntityMacerator.recipes, fuels, "/IC2sprites/GUIMacerator.png", machine, 3));
+			allTabs.add(new TabRecipeViewerFurnace(this, TileEntityExtractor.recipes, fuels, "/IC2sprites/GUIExtractor.png", machine, 4));
+			allTabs.add(new TabRecipeViewerFurnace(this, TileEntityCompressor.recipes, fuels, "/IC2sprites/GUICompressor.png", machine, 5));
+			allTabs.add(new TabRecipeViewerIC2CanningMachine(this, fuels, "/IC2sprites/GUICanner.png", machine, 6));
+		
+		}
+		if(ModLoader.isModLoaded("mod_Aether")) {
+			allTabs.add(new TabRecipeViewerAether(this, TileEntityEnchanter.class, new ArrayList<ItemStack>(Arrays.asList(new ItemStack(AetherItems.AmbrosiumShard))), "/aether/gui/enchanter.png", AetherBlocks.Enchanter));
+			try
+	        {
+				Class.forName("TileEntityFreezer");
+				allTabs.add(new TabRecipeViewerAether(this, TileEntityFreezer.class, new ArrayList<ItemStack>(Arrays.asList(new ItemStack(AetherBlocks.Icestone))), "/aether/gui/enchanter.png", AetherBlocks.Freezer));
+			} catch (ClassNotFoundException e) { }
+		}
+		if(ModLoader.isModLoaded("mod_BuildCraftFactory")) {
+			buildcraftFactoryInstalled = true;
+		}
+		for(TabRecipeViewer tab : modTabs) {
+			allTabs.add(tab);
+		}
+	}
+	
+    public static ArrayList<TabRecipeViewer> getTabs() {
 		tabs = orderTabs();
         return tabs;
 	}
@@ -458,7 +461,12 @@ public class mod_HowManyItems extends BaseMod
 					} else if (field.getType() == boolean.class) {
 						field.set(this, Boolean.parseBoolean(as[1]));
 					} else if (field.getType() == String.class) {
-						field.set(this, String.valueOf(as[1]));
+						if(as.length == 1) {
+							field.set(this, "");
+						}
+						else {
+							field.set(this, String.valueOf(as[1]));
+						}
 					}
 				}
 				else if (s.contains(":")) {
@@ -491,6 +499,11 @@ public class mod_HowManyItems extends BaseMod
 	public static boolean optionsScrollInverted = false;
     
 	public static String optionsMpGiveCommand = "/give {0} {1} {2}";
+	public static String optionsMpHealCommand = "";
+	public static String optionsMpTimeDayCommand = "/time set 0";
+	public static String optionsMpTimeNightCommand = "/time set 13000";
+	public static String optionsMpRainONCommand = "";
+	public static String optionsMpRainOFFCommand = "";
 	
     public static boolean optionsRecipeViewerDraggableGui = false;
     

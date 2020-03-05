@@ -13,6 +13,7 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 	private ArrayList<ItemStack> fuels;
 	private Block tabBlock;
 	private int metadata;
+	private boolean damagedFurnaceInput = false;
 	
 	public TabRecipeViewerFurnace(BaseMod tabCreator) {
 		this(tabCreator, new HashMap(), new ArrayList<ItemStack>(), "/gui/furnace.png", Block.stoneOvenIdle);
@@ -33,6 +34,16 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 		for(Item item: Item.itemsList) {
 			if(item != null && ModLoader.AddAllFuel(item.shiftedIndex) > 0) fuels.add(new ItemStack(item));
 		}
+		
+		try
+        {
+            ModLoader.getPrivateValue(net.minecraft.src.TileEntityFurnace.class, new TileEntityFurnace(), "furnaceHacks");
+            damagedFurnaceInput = true;
+        }
+        catch(Exception exception)
+        {
+        	damagedFurnaceInput = false;
+        }
 	}
 	
 	public TabRecipeViewerFurnace(BaseMod tabCreator, Map recipes, ArrayList<ItemStack> fuels, String texturePath, Block tabBlock) {
@@ -118,13 +129,18 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 			ItemStack output = (ItemStack)(recipesComplete.get(obj));
 			ItemStack input;
 			if ((Integer)obj < Block.blocksList.length) {
+				if(Block.blocksList[(Integer)obj] == null) continue;
 				input = new ItemStack(Block.blocksList[(Integer)obj], 1, dmg);
 			}
 			else {
 				if((Integer)obj < Item.itemsList.length)
 				input = new ItemStack(Item.itemsList[(Integer)obj], 1, dmg);
 				//fix for tmim's mods
-				else input = new ItemStack(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)], 1, output.getItemDamage());
+				else if(damagedFurnaceInput && (Integer)obj - (output.getItemDamage() << 16) < Block.blocksList.length){
+					if(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)] == null) continue;
+					input = new ItemStack(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)], 1, output.getItemDamage());
+				}
+				else continue;
 			}
 			if(filter == null ||
 					(getUses && input.itemID == filter.itemID ) ||

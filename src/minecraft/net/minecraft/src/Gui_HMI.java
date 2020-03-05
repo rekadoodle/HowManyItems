@@ -107,12 +107,18 @@ public class Gui_HMI extends GuiScreen {
 		controlList.add(buttonOptions = new GuiButtonHMI(id++, searchBoxX + searchBoxWidth + 1, screen.height - BUTTON_HEIGHT - 1, BUTTON_HEIGHT, mod_HowManyItems.optionsCheatsEnabled ? 1 : 0));
 		controlList.add(buttonNextPage = new GuiButtonHMI(id++, screen.width - (screen.width - k - screen.xSize) / 3, 0, (screen.width - k - screen.xSize) / 3, BUTTON_HEIGHT, "Next"));
 		controlList.add(buttonPrevPage = new GuiButtonHMI(id++, k + screen.xSize, 0, (screen.width - k - screen.xSize) / 3, BUTTON_HEIGHT, "Prev"));
-		if(mod_HowManyItems.optionsCheatsEnabled && !mc.theWorld.multiplayerWorld) {
-			controlList.add(buttonTimeDay = new GuiButtonHMI(id++, 0, 0, BUTTON_HEIGHT, 12));
-			controlList.add(buttonTimeNight = new GuiButtonHMI(id++, BUTTON_HEIGHT, 0, BUTTON_HEIGHT, 13));
-			controlList.add(buttonToggleRain = new GuiButtonHMI(id++, BUTTON_HEIGHT * 2, 0, BUTTON_HEIGHT, 14));
-			controlList.add(buttonHeal = new GuiButtonHMI(id++, BUTTON_HEIGHT * 3, 0, BUTTON_HEIGHT, 15));
-			controlList.add(buttonTrash = new GuiButtonHMI(id++, 0, screen.height - BUTTON_HEIGHT - 1, 60, BUTTON_HEIGHT, "Trash"));
+		if(mod_HowManyItems.optionsCheatsEnabled) {
+			boolean mp = mc.theWorld.multiplayerWorld;
+			if(!mp || !mod_HowManyItems.optionsMpTimeDayCommand.isEmpty()) 
+				controlList.add(buttonTimeDay = new GuiButtonHMI(id++, 0, 0, BUTTON_HEIGHT, 12));
+			if(!mp || !mod_HowManyItems.optionsMpTimeNightCommand.isEmpty()) 
+				controlList.add(buttonTimeNight = new GuiButtonHMI(id++, BUTTON_HEIGHT, 0, BUTTON_HEIGHT, 13));
+			if(!mp || !mod_HowManyItems.optionsMpRainOFFCommand.isEmpty() || !mod_HowManyItems.optionsMpRainONCommand.isEmpty()) 
+				controlList.add(buttonToggleRain = new GuiButtonHMI(id++, BUTTON_HEIGHT * 2, 0, BUTTON_HEIGHT, 14));
+			if(!mp || !mod_HowManyItems.optionsMpHealCommand.isEmpty()) 
+				controlList.add(buttonHeal = new GuiButtonHMI(id++, BUTTON_HEIGHT * 3, 0, BUTTON_HEIGHT, 15));
+			if(!mp) 
+				controlList.add(buttonTrash = new GuiButtonHMI(id++, 0, screen.height - BUTTON_HEIGHT - 1, 60, BUTTON_HEIGHT, "Trash"));
 		}
 	}
 	
@@ -422,8 +428,6 @@ public class Gui_HMI extends GuiScreen {
 		
 		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
 		RenderHelper.disableStandardItemLighting();
-		
-		
 	}
 	
 	public String getNiceItemName(ItemStack item) {
@@ -446,10 +450,7 @@ public class Gui_HMI extends GuiScreen {
 		if(System.currentTimeMillis() > guiClosedCooldown) {
 		int k = (screen.width - screen.xSize) / 2 + screen.xSize + 1;
 		int w = screen.width - (screen.width - screen.xSize) / 2 - screen.xSize - 1;
-		if(posX > k) {
-			int x = (posX - k - (w % 18)/2)/18;
-			int y = (posY - BUTTON_HEIGHT)/18 + 1;
-		}
+
 		int canvasHeight = screen.height - BUTTON_HEIGHT * 2;
 		if(mod_HowManyItems.optionsCentredSearchBar) canvasHeight += BUTTON_HEIGHT;
 		searchBox.mouseClicked(posX, posY, eventButton);
@@ -472,9 +473,9 @@ public class Gui_HMI extends GuiScreen {
 			            messageformat.setFormatByArgumentIndex(2, numberformat);
 			            messageformat.setFormatByArgumentIndex(3, numberformat);
 			            Object aobj[] = {
-			                mc.thePlayer.username, Integer.valueOf(hoverItem.itemID), (eventButton == 0) ? hoverItem.getMaxStackSize() : 1, Integer.valueOf(hoverItem.getItemDamage())
+			                mc.thePlayer.username, hoverItem.itemID, (eventButton == 0) ? hoverItem.getMaxStackSize() : 1, Integer.valueOf(hoverItem.getItemDamage())
 			            };
-			            mc.thePlayer.sendChatMessage(messageformat.format(((Object) (aobj))));
+			            mc.thePlayer.sendChatMessage(messageformat.format((aobj)));
 					}
 				}
 			}
@@ -565,7 +566,7 @@ public class Gui_HMI extends GuiScreen {
 				mc.displayGuiScreen(new GuiOptions_HMI(screen));
 			}
 		}
-		else if(!mc.theWorld.multiplayerWorld && (guibutton == buttonTimeDay || guibutton == buttonTimeNight || guibutton == buttonToggleRain)) {
+		else if(guibutton == buttonTimeDay || guibutton == buttonTimeNight || guibutton == buttonToggleRain) {
 			if(!mc.theWorld.multiplayerWorld) {
 				Field worldInfoField = World.class.getDeclaredFields()[30];
 				try {
@@ -587,7 +588,26 @@ public class Gui_HMI extends GuiScreen {
 				catch (IllegalAccessException e) { e.printStackTrace(); }
 			}
 			else {
-				//mp command
+				if(guibutton == buttonTimeDay) {
+					mc.thePlayer.sendChatMessage(mod_HowManyItems.optionsMpTimeDayCommand);
+				}
+				else if(guibutton == buttonTimeNight) {
+					mc.thePlayer.sendChatMessage(mod_HowManyItems.optionsMpTimeNightCommand);
+				}
+				else if(guibutton == buttonToggleRain) {
+					Field worldInfoField = World.class.getDeclaredFields()[30];
+					try {
+						WorldInfo worldInfo = (WorldInfo)worldInfoField.get(mc.theWorld);
+						if(worldInfo.getRaining()) {
+							mc.thePlayer.sendChatMessage(mod_HowManyItems.optionsMpRainOFFCommand);
+						}
+						else {
+							mc.thePlayer.sendChatMessage(mod_HowManyItems.optionsMpRainONCommand);
+						}
+					} 
+					catch (IllegalArgumentException e) { e.printStackTrace(); } 
+					catch (IllegalAccessException e) { e.printStackTrace(); }
+				}
 			}
 		}
 		else if(!mc.theWorld.multiplayerWorld && guibutton == buttonHeal) {
@@ -595,7 +615,7 @@ public class Gui_HMI extends GuiScreen {
 				mc.thePlayer.heal(100);
 			}
 			else {
-				//mp command
+				mc.thePlayer.sendChatMessage(mod_HowManyItems.optionsMpHealCommand);
 			}
 		}
 		else if(!mc.theWorld.multiplayerWorld && guibutton == buttonTrash) {
