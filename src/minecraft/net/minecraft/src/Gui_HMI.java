@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -101,7 +102,7 @@ public class Gui_HMI extends GuiScreen {
 			searchBoxWidth = screen.xSize - BUTTON_HEIGHT - 3;
 		}
 		int id = 0;
-		searchBox = new GuiTextFieldHMI(screen, screen.fontRenderer, searchBoxX, screen.height - BUTTON_HEIGHT + 1, searchBoxWidth, BUTTON_HEIGHT - 4, search);
+		searchBox = new GuiTextFieldHMI(screen, fontRenderer, searchBoxX, screen.height - BUTTON_HEIGHT + 1, searchBoxWidth, BUTTON_HEIGHT - 4, search);
 		searchBox.setMaxStringLength((searchBoxWidth - 10) / 6);
 		controlList.add(buttonOptions = new GuiButtonHMI(id++, searchBoxX + searchBoxWidth + 1, screen.height - BUTTON_HEIGHT - 1, BUTTON_HEIGHT, mod_HowManyItems.optionsCheatsEnabled ? 1 : 0));
 		controlList.add(buttonNextPage = new GuiButtonHMI(id++, screen.width - (screen.width - k - screen.xSize) / 3, 0, (screen.width - k - screen.xSize) / 3, BUTTON_HEIGHT, "Next"));
@@ -115,11 +116,7 @@ public class Gui_HMI extends GuiScreen {
 		}
 	}
 	
-	public void drawScreen(int posX, int posY, float f) {
-		screen.drawScreen(posX, posY, f);
-		drawScreen(posX, posY);
-		mod_HowManyItems.dontRender = true;
-	}
+	
 	
 	public boolean doesGuiPauseGame()
     {
@@ -132,8 +129,16 @@ public class Gui_HMI extends GuiScreen {
 			setWorldAndResolution(mc, screen.width, screen.height);
 		if((Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) && mod_HowManyItems.getTabs().size() > 0) {
 			buttonOptions.iconIndex = 2;
+			if(buttonTrash != null) {
+				buttonTrash.displayString = "Delete ALL";
+			}
 		}
-		else buttonOptions.iconIndex = mod_HowManyItems.optionsCheatsEnabled ? 1 : 0;
+		else {
+			buttonOptions.iconIndex = mod_HowManyItems.optionsCheatsEnabled ? 1 : 0;
+			if(buttonTrash != null) {
+				buttonTrash.displayString = "Trash";
+			}
+		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		int k = (screen.width - screen.xSize) / 2 + screen.xSize + 1;
@@ -148,7 +153,7 @@ public class Gui_HMI extends GuiScreen {
 			}
 		}
 		if(posX > k || buttonHovered || searchBox.hovered(posX, posY)) {
-			mc.currentScreen = this;
+			//mc.currentScreen = this;
 		}
 		else if(mc.currentScreen == this) mc.currentScreen = screen;
 		GL11.glDisable(2896 /*GL_LIGHTING*/);
@@ -177,31 +182,9 @@ public class Gui_HMI extends GuiScreen {
 		int y = 0;
 		Boolean itemHovered = false;
 		InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
-		int x1, x2, y1, y2;
-		x1 = x2 = y1 = y2 = 0;
 		int canvasHeight = screen.height - BUTTON_HEIGHT * 2;
 		if(mod_HowManyItems.optionsCentredSearchBar) canvasHeight += BUTTON_HEIGHT;
-		if(mc.currentScreen == screen && inventoryplayer.getItemStack() == null)
-        {
-			for(int i1 = 0; i1 < screen.inventorySlots.slots.size(); i1++)
-	        {
-	            ItemStack slot1 = mod_HowManyItems.itemAtPosition(screen, posX, posY);
-	            if(slot1 != null)
-	            {
-	            	String s = (new StringBuilder()).append("").append(StringTranslate.getInstance().translateNamedKey(slot1.getItemName())).toString().trim();
-		            if(s.length() > 0)
-		            {
-		                int k1 = (posX) + 12;
-		                int i2 = posY - 12;
-		                int j2 = fontRenderer.getStringWidth(s);
-		                x1 = k1 - 3 - 9;
-		                x2 = k1 + j2 + 3 - 9;
-		                y1 = i2 - 3 - 9;
-		                y2 = i2 + 8 + 3 - 9;
-		            }
-	            }
-            }
-        }
+		
 		for(int i = index; i < currentItems.size(); i++) {
 			if((x + 1) * 18 > w) {
 				y++;
@@ -218,7 +201,7 @@ public class Gui_HMI extends GuiScreen {
             GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
 			if(!itemHovered && posX + 2> k + (w % 18)/2 &&
 					(posX - (w % 18)/2 - k + 1) / 18 >= x && (posX - (w % 18)/2 - k + 1) / 18 < x + 1
-					&& (posY - (canvasHeight % 18) /2  - BUTTON_HEIGHT) / 18 >= y && (posY - (canvasHeight % 18) /2  - BUTTON_HEIGHT) / 18 < y + 1 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2) {
+					&& (posY - (canvasHeight % 18) /2  - BUTTON_HEIGHT) / 18 >= y && (posY - (canvasHeight % 18) /2  - BUTTON_HEIGHT) / 18 < y + 1 && posY >= BUTTON_HEIGHT + (canvasHeight % 18) /2 - 1) {
 				itemHovered = true;
 				hoverItem = currentItems.get(i);
                 if(!hiddenItems.contains(currentItems.get(i))) {
@@ -260,11 +243,8 @@ public class Gui_HMI extends GuiScreen {
 			}
 			GL11.glEnable(2896 /*GL_LIGHTING*/);
             GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-			
-			if(!(x1 < (w % 18)/2 + k + x * 18 + 9 && x2 > (w % 18)/2 + k + x * 18 - 9
-					&& y1 < BUTTON_HEIGHT + (canvasHeight % 18) /2 + y  * 18 + 9 && y2 > BUTTON_HEIGHT + (canvasHeight % 18) /2 + y * 18 - 9)) {
 				itemRenderer.renderItemIntoGUI(screen.fontRenderer, screen.mc.renderEngine, currentItems.get(i), (w % 18)/2 + k + x * 18, BUTTON_HEIGHT + (canvasHeight % 18) /2 + y * 18);
-			}
+				itemRenderer.renderItemOverlayIntoGUI(screen.fontRenderer, screen.mc.renderEngine, currentItems.get(i), (w % 18)/2 + k + x * 18, BUTTON_HEIGHT + (canvasHeight % 18) /2 + y * 18);
 			x++;
 			if(i == currentItems.size() - 1) {
 				if((canvasHeight / 18) * (w / 18) > currentItems.size()) {
@@ -305,10 +285,11 @@ public class Gui_HMI extends GuiScreen {
 		if(itemsPerPage < currentItems.size()) {
 			pageIndex = index / itemsPerPage;
 		}
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		String page = (pageIndex + 1) + "/" + (currentItems.size() / itemsPerPage + 1);
 		fontRenderer.drawStringWithShadow(page, screen.width - w/2 - fontRenderer.getStringWidth(page)/2, 6, 0xe0e0e0);
 		buttonNextPage.enabled = buttonPrevPage.enabled = itemsPerPage < currentItems.size();
-        if(mc.currentScreen == this && inventoryplayer.getItemStack() != null)
+        if(inventoryplayer.getItemStack() != null)
         {
             GL11.glTranslatef(0.0F, 0.0F, 32F);
             itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, inventoryplayer.getItemStack(), posX - 8, posY - 8);
@@ -317,8 +298,7 @@ public class Gui_HMI extends GuiScreen {
 		if(!itemHovered) {
 			hoverItem = null;
 		}
-			if(mc.currentScreen == this) {
-				String s = "";
+			String s = "";
 				if (inventoryplayer.getItemStack() == null && hoverItem != null) {
 					if(!showHiddenItems) {
 						s = getNiceItemName(hoverItem); 
@@ -350,8 +330,8 @@ public class Gui_HMI extends GuiScreen {
 						}
 					}
 				}
-				else if(mod_HowManyItems.optionsCheatsEnabled && inventoryplayer.getItemStack() != null && (hoverItem != null || ((posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
-						&& posX < screen.width - (w % 18)/2) && posY < screen.height - BUTTON_HEIGHT - (canvasHeight % 18) /2))) 
+				else if(mod_HowManyItems.optionsCheatsEnabled && inventoryplayer.getItemStack() != null && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
+						&& posX < screen.width - (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2  && posY < BUTTON_HEIGHT + canvasHeight))) 
 				{
 					s = "Delete " + getNiceItemName(inventoryplayer.getItemStack());
 				}
@@ -410,7 +390,35 @@ public class Gui_HMI extends GuiScreen {
 					GL11.glEnable(2896 /*GL_LIGHTING*/);
 					GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
 				}
-			}
+				else if(inventoryplayer.getItemStack() == null && mod_HowManyItems.itemAtPosition(screen, posX, posY) != null) {
+					//s = getNiceItemName(mod_HowManyItems.itemAtPosition(screen, posX, posY));
+					ItemStack item = mod_HowManyItems.itemAtPosition(screen, posX, posY);
+					s = StringTranslate.getInstance().translateNamedKey(item.getItemName());
+					int k1 = (posX) + 12;
+					int i2 = posY - 12;
+					int j2 = fontRenderer.getStringWidth(s);
+					GL11.glDisable(2896 /*GL_LIGHTING*/);
+					GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+					if(k1 - 3 <= k && k1 + j2 + 3 > k) {
+						drawRect(k, i2 - 3, k1 + j2 + 3, i2 + 8 + 3, 0xc0000000);
+						fontRenderer.drawStringWithShadow(s, k1, i2, -1);
+					}
+					if(s.length() == 0) {
+						s = getNiceItemName(item);
+						j2 = fontRenderer.getStringWidth(s);
+						drawRect(k1 - 3, i2 - 3, k1 + j2 + 3, i2 + 8 + 3, 0xc0000000);
+						fontRenderer.drawStringWithShadow(s, k1, i2, -1);
+					}
+					else if(mod_HowManyItems.optionsShowItemIDs) {
+						s = " " + item.itemID;
+						if(item.getHasSubtypes()) s+= ":" + item.getItemDamage();
+						int j3 = fontRenderer.getStringWidth(s);
+						drawRect(k1 + j2 + 3, i2 - 3, k1 + j2 + j3 + 3, i2 + 8 + 3, 0xc0000000);
+						fontRenderer.drawStringWithShadow(s, k1 + j2, i2, -1);
+					}
+					GL11.glEnable(2896 /*GL_LIGHTING*/);
+					GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+				}
 		
 		GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
 		RenderHelper.disableStandardItemLighting();
@@ -436,7 +444,6 @@ public class Gui_HMI extends GuiScreen {
 
 	public void mouseClicked(int posX, int posY, int eventButton) {
 		if(System.currentTimeMillis() > guiClosedCooldown) {
-			
 		int k = (screen.width - screen.xSize) / 2 + screen.xSize + 1;
 		int w = screen.width - (screen.width - screen.xSize) / 2 - screen.xSize - 1;
 		if(posX > k) {
@@ -472,10 +479,7 @@ public class Gui_HMI extends GuiScreen {
 				}
 			}
 			else if(mc.thePlayer.inventory.getItemStack() == null) {
-				if(!modTickKeyPress) {
-					mod_HowManyItems.pushRecipe(screen, hoverItem, eventButton == 1);
-				}
-				else modTickKeyPress = false;
+				mod_HowManyItems.pushRecipe(screen, hoverItem, eventButton == 1);
 			}
 			
 		}
@@ -509,8 +513,8 @@ public class Gui_HMI extends GuiScreen {
 				}
 			}
 		}
-		if((mc.thePlayer.inventory.getItemStack() != null && !mc.theWorld.multiplayerWorld && (hoverItem != null || ((posX > k + (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2
-				&& posX < screen.width - (w % 18)/2) && posY < screen.height - BUTTON_HEIGHT - (canvasHeight % 18) /2))) && mod_HowManyItems.optionsCheatsEnabled) {
+		if((mc.thePlayer.inventory.getItemStack() != null && !mc.theWorld.multiplayerWorld && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
+				&& posX < screen.width - (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2  && posY < BUTTON_HEIGHT + canvasHeight))) && mod_HowManyItems.optionsCheatsEnabled) {
 			if(eventButton == 0) {
 				mc.thePlayer.inventory.setItemStack(null);
 			}
@@ -527,11 +531,9 @@ public class Gui_HMI extends GuiScreen {
 				mc.thePlayer.inventory.setItemStack(null);
 			}
 		}
-		else 
-		
-		
-		if(mc.currentScreen == this) {
+		else {
 			super.mouseClicked(posX, posY, eventButton);
+			
 			for(int kx = 0; kx < controlList.size(); kx++)
 			{
 				if(((GuiButton)controlList.get(kx)).mousePressed(mc, posX, posY)) {
@@ -539,9 +541,12 @@ public class Gui_HMI extends GuiScreen {
 				}
 			}
 			if (!searchBox.hovered(posX, posY)) screen.mouseClicked(posX, posY, eventButton);
+			}
 		}
-
-		}
+	}
+	
+	public void searchBoxMouseClicked(int posX, int posY, int eventButton) {
+		searchBox.mouseClicked(posX, posY, eventButton);
 	}
 	
 	protected void actionPerformed(GuiButton guibutton)
@@ -668,7 +673,7 @@ public class Gui_HMI extends GuiScreen {
         			lastKey = i;
         			lastKeyTimeout = System.currentTimeMillis() + 200L;
                 	if(mc.currentScreen == this) {
-                		if(i == mod_HowManyItems.allRecipes.keyCode) {
+                		if(i == mod_HowManyItems.allRecipes.keyCode && mc.thePlayer.inventory.getItemStack() == null) {
                 			if (screen instanceof GuiRecipeViewer) {
                 				((GuiRecipeViewer) screen).push(null, false);
                 			}
@@ -701,6 +706,19 @@ public class Gui_HMI extends GuiScreen {
 		prevSearches.clear();
 	}
 	
+	public boolean mouseOverUI(Minecraft minecraft, int posX, int posY) {
+		for(GuiButton button : (List<GuiButton>)controlList) {
+			if(button.mousePressed(minecraft, posX, posY))
+				return true;
+		}
+		if(searchBox.hovered(posX, posY))
+			return true;
+		if(posX > (screen.xSize + screen.width) / 2) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void setWorldAndResolution(Minecraft minecraft, int i, int j)
     {
 		if(minecraft.currentScreen == this) screen.setWorldAndResolution(minecraft, i, j);
@@ -710,7 +728,7 @@ public class Gui_HMI extends GuiScreen {
     protected void mouseMovedOrUp(int i, int j, int k)
     {
         super.mouseMovedOrUp(i, j, k);
-        if(mc.currentScreen == this) screen.mouseMovedOrUp(i, j, k);
+        screen.mouseMovedOrUp(i, j, k);
     }
 	
 	public static boolean searchBoxFocused() {
@@ -798,7 +816,13 @@ public class Gui_HMI extends GuiScreen {
 	                try
 	                {
 	                    int l = item.getIconIndex(itemstack);
-	                    String s = (new StringBuilder()).append(itemstack.getItemName()).append("@").append(l).toString();
+	                    String s = (new StringBuilder()).append(StringTranslate.getInstance().translateNamedKey(itemstack.getItemName())).toString();
+	                    if(s.length() == 0) s = (new StringBuilder()).append(itemstack.getItemName()).append("@").append(l).toString();
+	                    if(dmg >= 4 && (s.contains(String.valueOf(dmg)) || s.contains(String.valueOf(dmg + 1)) || s.contains(String.valueOf(dmg - 1)))){
+	                    	break;
+	                    }
+	                    s = (new StringBuilder(s)).append("@").append(l).toString();
+	                    //System.out.println(s);
 	                    if(!currentItemNames.contains(s))
 	                    {
 	                        allItems.add(itemstack);
@@ -813,6 +837,30 @@ public class Gui_HMI extends GuiScreen {
 	                catch(IndexOutOfBoundsException indexoutofboundsexception) { }
 	                break;
 	            }
+	        }
+	        
+	        List recipes = CraftingManager.getInstance().getRecipeList();
+	        recipeLoop : for(Iterator iterator = recipes.iterator(); iterator.hasNext();)
+	        {
+	            IRecipe irecipe = (IRecipe)iterator.next();
+	            if(!irecipe.getRecipeOutput().getHasSubtypes()) {
+	            	continue recipeLoop;
+	            }
+	            for(ItemStack item : allItems) {
+	            	if(item.isItemEqual(irecipe.getRecipeOutput()))
+	            		continue recipeLoop;
+	            }
+	            for(ItemStack item : allItems) {
+	            	if(item.isItemEqual(irecipe.getRecipeOutput())) {
+	            		continue recipeLoop;
+	            	}
+	            	if(item.itemID > irecipe.getRecipeOutput().itemID || (item.itemID == irecipe.getRecipeOutput().itemID && item.getItemDamage() > irecipe.getRecipeOutput().getItemDamage())) {
+	            		allItems.add(allItems.indexOf(item), new ItemStack(irecipe.getRecipeOutput().itemID, 1, irecipe.getRecipeOutput().getItemDamage()));
+	            		continue recipeLoop;
+	            	}
+	            }
+	            allItems.add(new ItemStack(irecipe.getRecipeOutput().itemID, 1, irecipe.getRecipeOutput().getItemDamage()));
+	           
 	        }
 			currentItems = getCurrentList(allItems);
 		}
@@ -875,6 +923,7 @@ public class Gui_HMI extends GuiScreen {
 			ModLoader.getMinecraftInstance().currentScreen = screen;
 			hoverItem = null;
 		}
+		mod_HowManyItems.writeConfig();
 	}
 
 	public static void focusSearchBox() {

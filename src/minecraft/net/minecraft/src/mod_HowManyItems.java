@@ -36,7 +36,7 @@ public class mod_HowManyItems extends BaseMod
 
 	public String Version()
     {
-        return "v4.0.0";
+        return "v4.1.0";
     }
 	
 	public String Description() {
@@ -66,10 +66,10 @@ public class mod_HowManyItems extends BaseMod
 	public static Gui_HMI hmi;
 	public static boolean dontRender = false;
 	private static BaseMod thisMod;
+	private int lastMouseButtonPressed = -1;
 	
 	public boolean OnTickInGUI(Minecraft mc, GuiScreen guiscreen) {
 		if(guiscreen instanceof GuiContainer || guiscreen instanceof Gui_HMI) {
-			
 			
 			if(optionsEnabled) {
 				if(Gui_HMI.allItems == null) {
@@ -85,14 +85,25 @@ public class mod_HowManyItems extends BaseMod
 			        hmi.setWorldAndResolution(mc, screen.width, screen.height);
 		        }
 				if(guiscreen != hmi && guiscreen == screen) {
-					int posX = (Mouse.getEventX() * screen.width) / mc.displayWidth;
-		            int posY = screen.height - (Mouse.getEventY() * screen.height) / mc.displayHeight - 1;
+					//int posX = (Mouse.getEventX() * screen.width) / mc.displayWidth;
+		            //int posY = screen.height - (Mouse.getEventY() * screen.height) / mc.displayHeight - 1;
+		            //if(mc.theWorld != null && mc.currentScreen != null) System.out.println("guitick");
+		            ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+		            int i = scaledresolution.getScaledWidth();
+		            int j = scaledresolution.getScaledHeight();
+		            int posX = (Mouse.getX() * i) / mc.displayWidth;
+		            int posY = j - (Mouse.getY() * j) / mc.displayHeight - 1;
 		            if(!dontRender) hmi.drawScreen(posX, posY);
-					if(Mouse.getEventButtonState())
-			        {
-						hmi.modTickKeyPress = true;
-						hmi.mouseClicked(posX, posY, Mouse.getEventButton());
-					}
+		            if(hmi.mouseOverUI(mc, posX, posY)) {
+		            	for(; Mouse.next(); hmi.handleMouseInput()) { }
+		            }
+		            else {
+
+		            	if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) {
+							hmi.searchBoxMouseClicked(posX, posY, Mouse.getEventButton());
+						}
+		            }
+			        
 					hmi.keyTyped();
 				}
 				else {
@@ -244,19 +255,21 @@ public class mod_HowManyItems extends BaseMod
     }
 	
 	public static void pushRecipe(GuiScreen gui, ItemStack item, boolean getUses) {
-		if (gui instanceof GuiRecipeViewer) {
-			((GuiRecipeViewer) gui).push(item, getUses);
-		}
-		else if (!Gui_HMI.searchBoxFocused() && getTabs().size() > 0){
-			Minecraft mc = ModLoader.getMinecraftInstance();
-			mc.setIngameNotInFocus();
-			GuiRecipeViewer newgui = new GuiRecipeViewer(item, getUses, gui);
-			mc.currentScreen = newgui;
-			ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
-			int i = scaledresolution.getScaledWidth();
-			int j = scaledresolution.getScaledHeight();
-            newgui.setWorldAndResolution(mc, i, j);
-            mc.skipRenderWorld = false;
+		if(ModLoader.getMinecraftInstance().thePlayer.inventory.getItemStack() == null) {
+			if (gui instanceof GuiRecipeViewer) {
+				((GuiRecipeViewer) gui).push(item, getUses);
+			}
+			else if (!Gui_HMI.searchBoxFocused() && getTabs().size() > 0){
+				Minecraft mc = ModLoader.getMinecraftInstance();
+				mc.setIngameNotInFocus();
+				GuiRecipeViewer newgui = new GuiRecipeViewer(item, getUses, gui);
+				mc.currentScreen = newgui;
+				ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+				int i = scaledresolution.getScaledWidth();
+				int j = scaledresolution.getScaledHeight();
+	            newgui.setWorldAndResolution(mc, i, j);
+	            mc.skipRenderWorld = false;
+			}
 		}
 	}
     

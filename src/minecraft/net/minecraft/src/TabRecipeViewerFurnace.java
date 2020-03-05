@@ -114,15 +114,18 @@ public class TabRecipeViewerFurnace extends TabRecipeViewer {
 		for (Object obj : recipesComplete.keySet()) {
 			int dmg = 0;
 			if (filter != null) dmg = filter.getItemDamage();
+			
+			ItemStack output = (ItemStack)(recipesComplete.get(obj));
 			ItemStack input;
 			if ((Integer)obj < Block.blocksList.length) {
 				input = new ItemStack(Block.blocksList[(Integer)obj], 1, dmg);
 			}
 			else {
+				if((Integer)obj < Item.itemsList.length)
 				input = new ItemStack(Item.itemsList[(Integer)obj], 1, dmg);
+				//fix for tmim's mods
+				else input = new ItemStack(Block.blocksList[(Integer)obj - (output.getItemDamage() << 16)], 1, output.getItemDamage());
 			}
-			ItemStack output = (ItemStack)(recipesComplete.get(obj));
-			
 			if(filter == null ||
 					(getUses && input.itemID == filter.itemID ) ||
 					(!getUses && output.itemID == filter.itemID && (output.getItemDamage() == filter.getItemDamage() || output.getItemDamage() < 0 || !output.getHasSubtypes())))

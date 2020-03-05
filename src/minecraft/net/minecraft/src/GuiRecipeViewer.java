@@ -28,8 +28,15 @@ public class GuiRecipeViewer extends GuiContainer
 	        ySize = mod_HowManyItems.optionsRecipeViewerGuiHeight;
 		}
 		else {
-			ySize -= 80;
-			xSize -= 20;
+			if(parent instanceof GuiContainer) {
+				xSize = ((GuiContainer)parent).xSize;
+				ySize -= 80;
+			}
+			else {
+				xSize = 254;
+				ySize = 136;
+			}
+			
 		}
         tabs = mod_HowManyItems.getTabs();
         newTab(tabs.get(0));
@@ -156,7 +163,7 @@ public class GuiRecipeViewer extends GuiContainer
     	int x = (width - xSize) / 2;
     	int y = (height - ySize) / 2;
     	ItemStack item = mod_HowManyItems.itemAtPosition(this, posX, posY);
-    	if(item != null) {
+    	if(item != null && mc.thePlayer.inventory.getItemStack() == null) {
     		push(item, k == 1);
     	}
     	else {
