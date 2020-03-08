@@ -331,4 +331,13 @@ public class Utils {
 		RenderHelper.disableStandardItemLighting();
 		enableLighting();
 	}
+	
+	
+	
+	public static Object getHandler(String path) {
+		try { 
+			return Utils.class.getClassLoader().loadClass(Utils.class.getPackage().getName() + ".references." + path + ".ConcreteHandler").newInstance(); 
+		}
+		catch (Throwable e) { e.printStackTrace(); return null; } 
+	}
 }

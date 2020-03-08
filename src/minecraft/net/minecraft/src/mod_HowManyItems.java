@@ -8,21 +8,18 @@ import java.util.Map;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import ic2.ItemBattery;
-import ic2.TileEntityCompressor;
-import ic2.TileEntityExtractor;
-import ic2.TileEntityMacerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.hmi.*;
 import net.minecraft.src.hmi.tabs.*;
-import net.minecraft.src.hmi.tabs.mods.*;
 
 public class mod_HowManyItems extends BaseMod
 {
 
 	@Override
 	public void ModsLoaded() {
-		
+		if(ModLoader.isModLoaded("mod_FCBetterThanWolves")) {
+			TabUtils.btwHandler = ((TabHandler) Utils.getHandler("btw"));
+		}
 	}
 	
 	//TODO
@@ -33,12 +30,35 @@ public class mod_HowManyItems extends BaseMod
 	//CHANGELOG
 	//fixed crash issue with minecolony
 	
-	//Use this if you are a making a mod that adds a tab
+	/**
+	 * @deprecated Use addTab()
+	 */
 	public static void addModTab(Tab tab) {
+    	addTab(tab);
+    }
+	
+	//Use this if you are a making a mod that adds a tab
+	public static void addTab(Tab tab) {
     	if(tab != null) {
     		modTabs.add(tab);
     	}
     }
+	
+	public static void addGuiToBlock(Class<? extends GuiContainer> gui, ItemStack item) {
+    	TabUtils.putItemGui(gui, item);
+    }
+	
+	public static void addWorkBenchGui(Class<? extends GuiContainer> gui) {
+		TabUtils.addWorkBenchGui(gui);
+	}
+	
+	public static void addEquivalentWorkbench(ItemStack item) {
+		TabUtils.addEquivalentWorkbench(item);
+	}
+	
+	public static void addEquivalentFurnace(ItemStack item) {
+		TabUtils.addEquivalentFurnace(item);
+	}
 	
 	public String Version()
     {

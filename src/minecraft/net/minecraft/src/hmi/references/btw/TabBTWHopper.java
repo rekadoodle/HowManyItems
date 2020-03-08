@@ -1,10 +1,11 @@
-package net.minecraft.src.hmi.tabs.mods;
+package net.minecraft.src.hmi.references.btw;
 
 import java.util.Map;
 
 import net.minecraft.src.BaseMod;
 import net.minecraft.src.mod_FCBetterThanWolves;
 import net.minecraft.src.hmi.Utils;
+import net.minecraft.src.hmi.tabs.TabGenericBlock;
 
 public class TabBTWHopper extends TabGenericBlock {
 

@@ -1,4 +1,4 @@
-package net.minecraft.src.hmi.tabs.mods;
+package net.minecraft.src.hmi.references.aether;
 
 import java.util.ArrayList;
 import java.util.Arrays;

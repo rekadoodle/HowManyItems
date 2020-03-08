@@ -1,4 +1,4 @@
-package net.minecraft.src.hmi.tabs.mods;
+package net.minecraft.src.hmi.tabs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,6 @@ import java.util.Map;
 
 import net.minecraft.src.*;
 import net.minecraft.src.hmi.Utils;
-import net.minecraft.src.hmi.tabs.Tab;
 
 public class TabGenericBlock extends Tab{
 
