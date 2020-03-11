@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import buildcraft.factory.GuiAutoCrafting;
+import net.minecraft.src.buildcraft.factory.GuiAutoCrafting;
 import net.minecraft.src.*;
 import net.minecraft.src.hmi.TabHandler;
 import net.minecraft.src.hmi.TabUtils;

@@ -343,20 +343,20 @@ public class TabCrafting extends TabWithTexture {
         	if (parent instanceof GuiInventory && i > 5)
         		break;
         	if(currentSlot.getHasStack()) {
-        		inv.func_27174_a(x, i, 0, true, player);
+        		inv.handleMouseClick(x, i, 0, true, player);
         		
         		if (currentSlot.getHasStack()) {
-        			inv.func_27174_a(x, i, 0, false, player);
+        			inv.handleMouseClick(x, i, 0, false, player);
         			if (player.inventory.getItemStack() != null) {
         				for (int j = i + 1; j < list.size(); j++) {
         					Slot slot = (Slot)list.get(j);
         					if (!slot.getHasStack()) {
-        						inv.func_27174_a(x, j, 0, false, player);
+        						inv.handleMouseClick(x, j, 0, false, player);
         						break;
         					}
         				}
         				if (player.inventory.getItemStack() != null) {
-        					inv.func_27174_a(x, -999, 0, false, player);
+        					inv.handleMouseClick(x, -999, 0, false, player);
         				}
         			}
         		}
@@ -368,14 +368,14 @@ public class TabCrafting extends TabWithTexture {
         	for (int j = i + 1; j < list.size(); j++) {
         		Slot slot = (Slot)list.get(j);
         		if (slot.getHasStack() && slot.getStack().itemID == item.itemID && (slot.getStack().getItemDamage() == item.getItemDamage() || item.getItemDamage() < 0 || !item.getHasSubtypes())) {
-        			inv.func_27174_a(x, j, 0, false, player);
+        			inv.handleMouseClick(x, j, 0, false, player);
         			if (parent instanceof GuiInventory && i > 3) {
-        				inv.func_27174_a(x, i - 1, 1, false, player);
+        				inv.handleMouseClick(x, i - 1, 1, false, player);
         				currentSlot = (Slot)list.get(i - 1);
         			}
         			else 
-        				inv.func_27174_a(x, i, 1, false, player);
-        			inv.func_27174_a(x, j, 0, false, player);
+        				inv.handleMouseClick(x, i, 1, false, player);
+        			inv.handleMouseClick(x, j, 0, false, player);
         			break;
         		}
         	}

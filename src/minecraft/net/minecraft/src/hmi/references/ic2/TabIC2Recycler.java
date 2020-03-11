@@ -3,7 +3,7 @@ package net.minecraft.src.hmi.references.ic2;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ic2.TileEntityRecycler;
+import net.minecraft.src.ic2.TileEntityRecycler;
 import net.minecraft.src.*;
 import net.minecraft.src.hmi.Utils;
 import net.minecraft.src.hmi.tabs.TabSmelting;
