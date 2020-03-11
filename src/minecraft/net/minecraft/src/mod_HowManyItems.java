@@ -75,7 +75,7 @@ public class mod_HowManyItems extends BaseMod
 	}
 
 	public String Icon() {
-		return "/hmi/modmenu.png";
+		return Utils.getResource("modmenu.png");
 	}
 	
 	public mod_HowManyItems()

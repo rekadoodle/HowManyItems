@@ -1,12 +1,16 @@
 package net.minecraft.src.hmi;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
@@ -22,6 +26,10 @@ public class Utils {
 	public static Random rand = new Random();
 	public static Gui gui = new Gui();
 	public static Minecraft mc = ModLoader.getMinecraftInstance();
+	
+	private static final List<String> loadedResources = new ArrayList<String>();
+	private static final List<String> missingResources = new ArrayList<String>();
+	private static final String resourcesFolder = "/hmi/resources/";
 	
 	//clean mine_diver code
 	//Used for easy reflection with obfuscated or regular fields
@@ -279,7 +287,7 @@ public class Utils {
 	public static void bindTexture() {
 		if(!localTextureBound) {
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/hmi/icons.png"));
+			mc.renderEngine.bindTexture(mc.renderEngine.getTexture(getResource("icons.png")));
 			localTextureBound = true;
 		}
 	}
@@ -332,7 +340,44 @@ public class Utils {
 		enableLighting();
 	}
 	
+	public static String getResource(String resource) {
+		resourceExists(resource);
+		return new StringBuilder().append(resourcesFolder).append(resource).toString();
+	}
 	
+	public static boolean resourceExists(String resource) {
+		if(loadedResources.contains(resource)) {
+			return true;
+		}
+		if(missingResources.contains(resource)) {
+			return false;
+		}
+		String location = new StringBuilder().append(resourcesFolder).append(resource).toString();
+		if(Utils.class.getResource(location) != null) {
+			loadedResources.add(resource);
+			return true;
+		}
+		else  {
+			missingResources.add(resource);
+			String error = "Missing file " + new File("bin\\minecraft.jar").getAbsolutePath().replace("\\", "/") + location;
+			if(System.getProperty("java.class.path").toLowerCase().contains("eclipse"))
+	        {
+				logError(new String[] {error, "Alternate Location " + mod_HowManyItems.class.getClassLoader().getResource("").getPath().replaceFirst("/*$", "") + location});
+	        }
+			else {
+				logError(error);
+			}
+			return false;
+		}
+	}
+	
+	public static void logError(String... lines) {
+		System.out.println(new StringBuilder().append("HMI ERROR: ").append(lines[0]).toString());
+		for (String message : lines) {
+			if(message == lines[0]) continue;
+			System.out.println(new StringBuilder().append('\t').append(message).toString());
+		}
+	}
 	
 	public static Object getHandler(String path) {
 		try { 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import buildcraft.factory.GuiAutoCrafting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import net.minecraft.src.hmi.Utils;
