@@ -134,7 +134,12 @@ public class TabSmelting extends TabWithTexture {
 			ItemStack output = (ItemStack)(recipesComplete.get(obj));
 			ItemStack input = null;
 			if(obj != null) {
-				
+				//fix for nfc 1.8.7
+				if(obj instanceof String) {
+					String[] string = ((String)obj).split(":");
+					obj = Integer.parseInt(string[0]);
+					dmg = Integer.parseInt(string[1]);
+				}
 				if ((Integer)obj < Block.blocksList.length) {
 					if(Block.blocksList[(Integer)obj] == null) continue;
 					input = new ItemStack(Block.blocksList[(Integer)obj], 1, dmg);
