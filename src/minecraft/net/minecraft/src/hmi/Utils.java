@@ -340,6 +340,20 @@ public class Utils {
 		enableLighting();
 	}
 	
+	public static boolean classExists(String className) {
+		try {
+			Class.forName(className);
+		} 
+		catch (ClassNotFoundException e) {
+			return false; 
+		}
+		return true;
+	}
+	
+	public static boolean nmsClassExists(String className) {
+		return classExists(className) || classExists("net.minecraft.src." + className);
+	}
+	
 	public static String getResource(String resource) {
 		resourceExists(resource);
 		return new StringBuilder().append(resourcesFolder).append(resource).toString();

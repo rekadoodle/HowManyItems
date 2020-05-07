@@ -51,6 +51,10 @@ public class TabUtils {
 		if(ModLoader.isModLoaded("mod_EE")) {
 			((TabHandler) Utils.getHandler("ee1")).loadTabs(mod);
 		}
+		
+		if(Utils.nmsClassExists("NFC")) {
+			((TabHandler) Utils.getHandler("nfc")).loadTabs(mod);
+		}
 	}
 	
 	public static ItemStack getItemFromGui(GuiContainer screen) {
