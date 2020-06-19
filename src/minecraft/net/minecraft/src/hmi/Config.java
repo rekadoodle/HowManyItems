@@ -42,15 +42,17 @@ public class Config {
 				configWriter.write(System.getProperty("line.separator") + "key_" + keybind.keyDescription + ":" + keybind.keyCode);
 			}
 			configWriter.write(System.getProperty("line.separator") + "hiddenItems=");
-			for(int i = 0; i < GuiOverlay.hiddenItems.size(); i++) {
+			ArrayList<ItemStack> hiddenItems = GuiOverlay.hiddenItems;
+			if(hiddenItems == null) hiddenItems = Utils.hiddenItems;
+			for(int i = 0; i < hiddenItems.size(); i++) {
 				if(i > 0) configWriter.write(",");
-				ItemStack item = GuiOverlay.hiddenItems.get(i);
+				ItemStack item = hiddenItems.get(i);
 				configWriter.write(String.valueOf(item.itemID));
 				if(item.getHasSubtypes()) {
 					configWriter.write(":" + String.valueOf(item.getItemDamage()));
 					int meta = item.getItemDamage();
-					for(int q = i + 1; q < GuiOverlay.hiddenItems.size() && GuiOverlay.hiddenItems.get(q).itemID == item.itemID; q++) {
-						if(++meta == GuiOverlay.hiddenItems.get(q).getItemDamage()) {
+					for(int q = i + 1; q < hiddenItems.size() && hiddenItems.get(q).itemID == item.itemID; q++) {
+						if(++meta == hiddenItems.get(q).getItemDamage()) {
 							i = q;
 						}
 						else {
