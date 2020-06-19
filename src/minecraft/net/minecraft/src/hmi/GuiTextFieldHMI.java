@@ -17,6 +17,14 @@ public class GuiTextFieldHMI extends GuiTextField {
         return isEnabled && posX >= xPos && posX < xPos + width && posY >= yPos && posY < yPos + height;
     }
 	
+	@Override
+	public void mouseClicked(int posX, int posY, int eventButton) {
+        super.mouseClicked(posX, posY, eventButton);
+        if(this.isFocused && eventButton == 1) {
+        	GuiOverlay.clearSearchBox();
+        }
+    }
+	
 	private final int xPos;
     private final int yPos;
     private final int width;
