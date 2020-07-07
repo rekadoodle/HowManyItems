@@ -62,7 +62,7 @@ public class mod_HowManyItems extends BaseMod
 	
 	public String Version()
     {
-        return "v4.2.0";
+        return "PRE c19";
     }
 
 	//For mine_diver's mod menu
@@ -100,7 +100,7 @@ public class mod_HowManyItems extends BaseMod
 		if(guiscreen instanceof GuiContainer) {
 			GuiContainer screen = (GuiContainer)guiscreen;
 			if(Config.overlayEnabled) {
-				if(GuiOverlay.screen != screen || screen.width != overlay.width || screen.height != overlay.height
+				if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height
 		    			|| screen.xSize != overlay.xSize || screen.ySize != overlay.ySize) {
 					overlay = new GuiOverlay(screen);
 		        }
