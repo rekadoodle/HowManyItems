@@ -93,7 +93,7 @@ public class Utils {
 		if(allItems == null) {
 ;			allItems = new ArrayList<ItemStack>();
 			
-			Item mcItemsList[] = Item.itemsList;
+			Item[] mcItemsList = Item.itemsList;
 	        for(int j = 0; j < mcItemsList.length; j++)
 	        {
 	            Item item = mcItemsList[j];

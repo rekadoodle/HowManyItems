@@ -15,6 +15,8 @@ public class ContainerRecipeViewer extends Container
 
     public ContainerRecipeViewer(InventoryRecipeViewer iinventory)
     {
+    	//setting the windowId to -1 prevents server registering recipe clicks as inventory clicks
+    	this.windowId = -1;
     	inv = iinventory;
     	resetSlots();
     }
