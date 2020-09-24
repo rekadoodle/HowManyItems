@@ -219,7 +219,7 @@ public class TabCrafting extends TabWithTexture {
 		for(Class<? extends GuiContainer> gui : guiCraftingStations) {
 			if(gui.isInstance(parent)) return true;
 		}
-		if (isVanillaWorkbench && (parent instanceof GuiInventory || parent == null || (TabUtils.aetherHandler != null && TabUtils.aetherHandler.isInventory(parent)))) {
+		if (isVanillaWorkbench && (parent == null || isInv(parent))) {
 			for (int i = 3; i < 10; i++) {
 				if (i != 4 && i != 5 && recipeItems[i] != null)
 					return false;
@@ -346,15 +346,20 @@ public class TabCrafting extends TabWithTexture {
         for(int i = 1; i < recipeItems.length; i++) {
         	ItemStack item = recipeItems[i];
         	Slot currentSlot = (Slot)list.get(i);
-        	if (parent instanceof GuiInventory && i > 5)
+        	int slotid = i;
+        	if (isInv(parent) && i > 5)
         		break;
+        	if (isInv(parent) && i > 3) {
+        		currentSlot = (Slot)list.get(i - 1);
+        		slotid--;
+        	}
         	if(currentSlot.getHasStack()) {
-        		inv.handleMouseClick(x, i, 0, true, player);
+        		inv.handleMouseClick(x, slotid, 0, true, player);
         		
         		if (currentSlot.getHasStack()) {
-        			inv.handleMouseClick(x, i, 0, false, player);
+        			inv.handleMouseClick(x, slotid, 0, false, player);
         			if (player.inventory.getItemStack() != null) {
-        				for (int j = i + 1; j < list.size(); j++) {
+        				for (int j = slotid + 1; j < list.size(); j++) {
         					Slot slot = (Slot)list.get(j);
         					if (!slot.getHasStack()) {
         						inv.handleMouseClick(x, j, 0, false, player);
@@ -388,6 +393,10 @@ public class TabCrafting extends TabWithTexture {
         	
     	}
 		
+	}
+	
+	boolean isInv(GuiScreen screen) {
+		return screen instanceof GuiInventory || (TabUtils.aetherHandler != null && TabUtils.aetherHandler.isInventory(screen));
 	}
 
 }
