@@ -13,6 +13,7 @@ public class TabUtils {
 	private static TabSmelting furnaceTab;
 	
 	public static TabHandler btwHandler;
+	public static AetherHandler aetherHandler;
 
 	public static void loadTabs(ArrayList<Tab> tabList, BaseMod mod) {
 		workbenchTab = new TabCrafting(mod);
@@ -37,7 +38,8 @@ public class TabUtils {
 			((TabHandler) Utils.getHandler("ic2")).loadTabs(mod);
 		}
 		if(ModLoader.isModLoaded("mod_Aether")) {
-			((TabHandler) Utils.getHandler("aether")).loadTabs(mod);
+			aetherHandler = ((AetherHandler) Utils.getHandler("aether"));
+			aetherHandler.loadTabs(mod);
 		}
 		
 		if(btwHandler != null) {

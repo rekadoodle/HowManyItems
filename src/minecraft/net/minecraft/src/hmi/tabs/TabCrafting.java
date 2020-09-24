@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.TabUtils;
 import net.minecraft.src.hmi.Utils;
 
 public class TabCrafting extends TabWithTexture {
@@ -218,7 +219,7 @@ public class TabCrafting extends TabWithTexture {
 		for(Class<? extends GuiContainer> gui : guiCraftingStations) {
 			if(gui.isInstance(parent)) return true;
 		}
-		if (isVanillaWorkbench && (parent instanceof GuiInventory || parent == null)) {
+		if (isVanillaWorkbench && (parent instanceof GuiInventory || parent == null || (TabUtils.aetherHandler != null && TabUtils.aetherHandler.isInventory(parent)))) {
 			for (int i = 3; i < 10; i++) {
 				if (i != 4 && i != 5 && recipeItems[i] != null)
 					return false;
@@ -320,7 +321,12 @@ public class TabCrafting extends TabWithTexture {
 			ScaledResolution scaledresolution = new ScaledResolution(Utils.mc.gameSettings, Utils.mc.displayWidth, Utils.mc.displayHeight);
 			int i = scaledresolution.getScaledWidth();
 			int j = scaledresolution.getScaledHeight();
-			parent = new GuiInventory(Utils.mc.thePlayer);
+			if(TabUtils.aetherHandler != null) {
+				parent = TabUtils.aetherHandler.newInv(Utils.mc.thePlayer);
+			}
+			else {
+				parent = new GuiInventory(Utils.mc.thePlayer);
+			}
 			Utils.mc.currentScreen = parent;
 			parent.setWorldAndResolution(Utils.mc, i, j);
 			Utils.mc.skipRenderWorld = false;
@@ -369,7 +375,7 @@ public class TabCrafting extends TabWithTexture {
         		Slot slot = (Slot)list.get(j);
         		if (slot.getHasStack() && slot.getStack().itemID == item.itemID && (slot.getStack().getItemDamage() == item.getItemDamage() || item.getItemDamage() < 0 || !item.getHasSubtypes())) {
         			inv.handleMouseClick(x, j, 0, false, player);
-        			if (parent instanceof GuiInventory && i > 3) {
+        			if ((parent instanceof GuiInventory || (TabUtils.aetherHandler != null && TabUtils.aetherHandler.isInventory(parent))) && i > 3) {
         				inv.handleMouseClick(x, i - 1, 1, false, player);
         				currentSlot = (Slot)list.get(i - 1);
         			}

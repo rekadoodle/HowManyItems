@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.AetherHandler;
 import net.minecraft.src.hmi.TabHandler;
 import net.minecraft.src.hmi.Utils;
 
-public class ConcreteHandler extends TabHandler {
+public class ConcreteHandler extends AetherHandler {
 
 	@Override
 	public void loadTabs(BaseMod basemod) {
@@ -19,4 +20,16 @@ public class ConcreteHandler extends TabHandler {
 			((TabHandler) Utils.getHandler("aether.freezer")).loadTabs(basemod);
         } catch (ClassNotFoundException e) { }
 	}
+
+	@Override
+	public boolean isInventory(GuiScreen screen) {
+		return screen instanceof GuiInventoryMoreSlots;
+	}
+
+	@Override
+	public GuiScreen newInv(EntityPlayer player) {
+		return new GuiInventoryMoreSlots(player);
+	}
+	
+	
 }
