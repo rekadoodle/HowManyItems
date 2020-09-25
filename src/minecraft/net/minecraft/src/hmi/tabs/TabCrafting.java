@@ -315,7 +315,6 @@ public class TabCrafting extends TabWithTexture {
 	}
 
 	public void setupRecipe(GuiScreen parent, ItemStack[] recipeItems) {
-		List list;
 		if (parent == null) {
 			Utils.mc.setIngameNotInFocus();
 			ScaledResolution scaledresolution = new ScaledResolution(Utils.mc.gameSettings, Utils.mc.displayWidth, Utils.mc.displayHeight);
@@ -330,69 +329,79 @@ public class TabCrafting extends TabWithTexture {
 			Utils.mc.currentScreen = parent;
 			parent.setWorldAndResolution(Utils.mc, i, j);
 			Utils.mc.skipRenderWorld = false;
-			//ModLoader.getMinecraftInstance().displayGuiScreen(parent);
 		}
-		list = ((GuiContainer)parent).inventorySlots.slots;
+		GuiContainer container = ((GuiContainer)parent);
+		List<?> inventorySlots = container.inventorySlots.slots;
 		
 		int recipeStackSize = 1;
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-			recipeStackSize = recipeStackSize(list, recipeItems);
+			recipeStackSize = recipeStackSize(inventorySlots, recipeItems);
 		}
 		
-		EntityPlayerSP player = ModLoader.getMinecraftInstance().thePlayer;
-    	PlayerController inv = ModLoader.getMinecraftInstance().playerController;
-    	int x = ((GuiContainer)parent).inventorySlots.windowId;
-        recipe:
-        for(int i = 1; i < recipeItems.length; i++) {
-        	ItemStack item = recipeItems[i];
-        	Slot currentSlot = (Slot)list.get(i);
-        	int slotid = i;
-        	if (isInv(parent) && i > 5)
+		this.player = Utils.mc.thePlayer;
+		this.inv = Utils.mc.playerController;
+		this.windowId = container.inventorySlots.windowId;
+        for(int recipeSlotIndex = 1; recipeSlotIndex < recipeItems.length; recipeSlotIndex++) {
+        	if (isInv(parent) && recipeSlotIndex > 5)
         		break;
-        	if (isInv(parent) && i > 3) {
-        		currentSlot = (Slot)list.get(i - 1);
+        	int slotid = recipeSlotIndex;
+        	if (isInv(parent) && recipeSlotIndex > 3) {
         		slotid--;
         	}
-        	if(currentSlot.getHasStack()) {
-        		inv.handleMouseClick(x, slotid, 0, true, player);
+        	Slot recipeSlot = (Slot)inventorySlots.get(slotid);
+        	//clear recipe slot
+        	if(recipeSlot.getHasStack()) {
+        		this.clickSlot(slotid, true, true);
         		
-        		if (currentSlot.getHasStack()) {
-        			inv.handleMouseClick(x, slotid, 0, false, player);
+        		if (recipeSlot.getHasStack()) {
+        			this.clickSlot(slotid, true, false);
         			if (player.inventory.getItemStack() != null) {
-        				for (int j = slotid + 1; j < list.size(); j++) {
-        					Slot slot = (Slot)list.get(j);
+        				for (int j = slotid + 1; j < inventorySlots.size(); j++) {
+        					Slot slot = (Slot)inventorySlots.get(j);
         					if (!slot.getHasStack()) {
-        						inv.handleMouseClick(x, j, 0, false, player);
+        						this.clickSlot(j, true, false);
         						break;
         					}
         				}
         				if (player.inventory.getItemStack() != null) {
-        					inv.handleMouseClick(x, -999, 0, false, player);
+        					this.clickSlot(-999, true, false);
         				}
         			}
         		}
         	}
+        	
+        	//if recipe slot should be empty, continue
+        	ItemStack item = recipeItems[recipeSlotIndex];
         	if (item == null) {
         		continue;
         	}
-        	while(!currentSlot.getHasStack() || (currentSlot.getStack().stackSize < recipeStackSize && currentSlot.getStack().getMaxStackSize() > 1)) 
-        	for (int j = i + 1; j < list.size(); j++) {
-        		Slot slot = (Slot)list.get(j);
-        		if (slot.getHasStack() && slot.getStack().itemID == item.itemID && (slot.getStack().getItemDamage() == item.getItemDamage() || item.getItemDamage() < 0 || !item.getHasSubtypes())) {
-        			inv.handleMouseClick(x, j, 0, false, player);
-        			if ((parent instanceof GuiInventory || (TabUtils.aetherHandler != null && TabUtils.aetherHandler.isInventory(parent))) && i > 3) {
-        				inv.handleMouseClick(x, i - 1, 1, false, player);
-        				currentSlot = (Slot)list.get(i - 1);
+        	
+        	//locate correct item and put in recipe slot
+        	while(!recipeSlot.getHasStack() || (recipeSlot.getStack().stackSize < recipeStackSize && recipeSlot.getStack().getMaxStackSize() > 1)) 
+        	for (int inventorySlotIndex = recipeSlotIndex + 1; inventorySlotIndex < inventorySlots.size(); inventorySlotIndex++) {
+        		Slot inventorySlot = (Slot)inventorySlots.get(inventorySlotIndex);
+        		if (inventorySlot.getHasStack() && inventorySlot.getStack().itemID == item.itemID && (inventorySlot.getStack().getItemDamage() == item.getItemDamage() || item.getItemDamage() < 0 || !item.getHasSubtypes())) {
+        			this.clickSlot(inventorySlotIndex, true, false);
+        			if (isInv(parent) && recipeSlotIndex > 3) {
+        				this.clickSlot(recipeSlotIndex - 1, false, false);
         			}
         			else 
-        				inv.handleMouseClick(x, i, 1, false, player);
-        			inv.handleMouseClick(x, j, 0, false, player);
+        				this.clickSlot(recipeSlotIndex, false, false);
+        			this.clickSlot(inventorySlotIndex, true, false);
         			break;
         		}
         	}
         	
     	}
 		
+	}
+	
+	PlayerController inv;
+	EntityPlayerSP player;
+	int windowId;
+	
+	void clickSlot(int slotIndex, boolean leftClick, boolean shiftClick) {
+		inv.handleMouseClick(windowId, slotIndex, leftClick ? 0 : 1, shiftClick, player);
 	}
 	
 	boolean isInv(GuiScreen screen) {
