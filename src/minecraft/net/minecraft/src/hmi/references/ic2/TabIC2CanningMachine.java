@@ -33,14 +33,15 @@ public class TabIC2CanningMachine extends TabSmelting {
 			}
 			if (recipe[0].getItem().shiftedIndex == mod_IC2.itemFuelCan.shiftedIndex
 					|| recipe[0].getItem().shiftedIndex == mod_IC2.itemArmorJetpack.shiftedIndex) {
+				recipe[3] = recipe[1];
 				if (filterCellCoal)
-					recipe[3] = new ItemStack(mod_IC2.itemCellCoalRef, 6);
+					recipe[1] = new ItemStack(mod_IC2.itemCellCoalRef, 6);
 				else if (filterCellBio)
-					recipe[3] = new ItemStack(mod_IC2.itemCellBioRef, 6);
+					recipe[1] = new ItemStack(mod_IC2.itemCellBioRef, 6);
 				else if (rand.nextBoolean())
-					recipe[3] = new ItemStack(mod_IC2.itemCellCoalRef, 6);
+					recipe[1] = new ItemStack(mod_IC2.itemCellCoalRef, 6);
 				else
-					recipe[3] = new ItemStack(mod_IC2.itemCellBioRef, 6);
+					recipe[1] = new ItemStack(mod_IC2.itemCellBioRef, 6);
 			}
 			else if (recipe[0].getItem().shiftedIndex == mod_IC2.itemTinCanFilled.shiftedIndex){
 				recipe[3] = new ItemStack(mod_IC2.itemTinCan, recipe[0].stackSize);
