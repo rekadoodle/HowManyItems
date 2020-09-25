@@ -306,8 +306,8 @@ public class TabCrafting extends TabWithTexture {
         for (int i = 0; i < itemStackSize.length; i++) {
         	ItemStack item = recipeItems[i + 1];
         	if(itemStackSize[i] == -1 || item.getMaxStackSize() == 1) continue;
-        	if(finalItemStackSize == -1 ||itemStackSize[i] < finalItemStackSize) {
-        		finalItemStackSize = itemStackSize[i];
+        	if(finalItemStackSize == -1 || itemStackSize[i] < finalItemStackSize || finalItemStackSize > item.getMaxStackSize()) {
+        		finalItemStackSize = Math.min(itemStackSize[i], item.getMaxStackSize());
         	}
     	}
         if(finalItemStackSize > 0) return finalItemStackSize;
