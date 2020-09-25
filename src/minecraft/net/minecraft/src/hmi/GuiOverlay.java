@@ -597,15 +597,15 @@ public class GuiOverlay extends GuiScreen {
 	protected void keyTyped(char c, int i)
     {
 		if(!searchBoxFocused() && Config.fastSearch && !mod_HowManyItems.keyHeldLastTick) {
-			if(i != mc.gameSettings.keyBindInventory.keyCode && i != Config.allRecipes.keyCode && i != Config.toggleOverlay.keyCode
+			if(!Utils.keyEquals(i, mc.gameSettings.keyBindInventory) && !Utils.keyEquals(i, Config.allRecipes) && !Utils.keyEquals(i, Config.toggleOverlay)
 					&& (ChatAllowedCharacters.allowedCharacters.indexOf(c) >= 0 || (i == Keyboard.KEY_BACK && searchBox.getText().length() > 0))) {
 				ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 				int i2 = scaledresolution.getScaledWidth();
 				int j2 = scaledresolution.getScaledHeight();
 				int posX = (Mouse.getEventX() * i2) / mc.displayWidth;
 				int posY = j2 - (Mouse.getEventY() * j2) / mc.displayHeight - 1;
-				if((Utils.hoveredItem(screen, posX, posY) == null && hoverItem == null) || (i != Config.pushRecipe.keyCode && i != Config.pushUses.keyCode)){
-					if(!(screen instanceof GuiRecipeViewer) || i != Config.prevRecipe.keyCode)
+				if((Utils.hoveredItem(screen, posX, posY) == null && hoverItem == null) || (!Utils.keyEquals(i, Config.pushRecipe) && !Utils.keyEquals(i, Config.pushUses))){
+					if(!(screen instanceof GuiRecipeViewer) || !Utils.keyEquals(i, Config.prevRecipe))
 						if(System.currentTimeMillis() > lastKeyTimeout)
 					searchBox.isFocused = true;
 				}
@@ -638,7 +638,7 @@ public class GuiOverlay extends GuiScreen {
         			lastKey = i;
         			lastKeyTimeout = System.currentTimeMillis() + 200L;
                 	if(mc.currentScreen == this) {
-                		if(i == Config.allRecipes.keyCode && mc.thePlayer.inventory.getItemStack() == null) {
+                		if(Utils.keyEquals(i, Config.allRecipes) && mc.thePlayer.inventory.getItemStack() == null) {
                 			if (screen instanceof GuiRecipeViewer) {
                 				((GuiRecipeViewer) screen).push(null, false);
                 			}

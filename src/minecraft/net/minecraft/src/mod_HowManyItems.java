@@ -107,9 +107,9 @@ public class mod_HowManyItems extends BaseMod
 				overlay.onTick();
 			}
 			Utils.drawStoredToolTip();
-			if(Keyboard.isKeyDown(Config.pushRecipe.keyCode) || Keyboard.isKeyDown(Config.pushUses.keyCode)) {
+			if(Utils.isKeyDown(Config.pushRecipe) || Utils.isKeyDown(Config.pushUses)) {
 				if(!keyHeldLastTick) {
-					boolean getUses = Keyboard.isKeyDown(Config.pushUses.keyCode);
+					boolean getUses = Utils.isKeyDown(Config.pushUses);
 					if (guiscreen instanceof GuiContainer) {
 						ItemStack newFilter = null;
 						
@@ -137,7 +137,7 @@ public class mod_HowManyItems extends BaseMod
 					}
 				}
 			}
-			else if(Keyboard.isKeyDown(Config.prevRecipe.keyCode)) {
+			else if(Utils.isKeyDown(Config.prevRecipe)) {
 				if(!keyHeldLastTick) {
 					if ((guiscreen instanceof GuiRecipeViewer || guiscreen instanceof GuiOverlay) && !GuiOverlay.searchBoxFocused()) {
 						if(guiscreen instanceof GuiOverlay && GuiOverlay.screen instanceof GuiRecipeViewer) guiscreen = GuiOverlay.screen;
@@ -150,7 +150,7 @@ public class mod_HowManyItems extends BaseMod
 				}
 			}
 			else if(Config.clearSearchBox.keyCode == Config.focusSearchBox.keyCode
-					&& Keyboard.isKeyDown(Config.clearSearchBox.keyCode)) {
+					&& Utils.isKeyDown(Config.clearSearchBox)) {
 				
 				if (guiscreen instanceof GuiContainer
 						|| guiscreen instanceof GuiOverlay) {
@@ -162,13 +162,13 @@ public class mod_HowManyItems extends BaseMod
 					}
 				}
 			}
-			else if(Keyboard.isKeyDown(Config.clearSearchBox.keyCode)) {
+			else if(Utils.isKeyDown(Config.clearSearchBox)) {
 				if (guiscreen instanceof GuiContainer
 						|| guiscreen instanceof GuiOverlay) {
 					GuiOverlay.clearSearchBox();
 				}
 			}
-			else if(Keyboard.isKeyDown(Config.focusSearchBox.keyCode)) {
+			else if(Utils.isKeyDown(Config.focusSearchBox)) {
 				if (guiscreen instanceof GuiContainer
 						|| guiscreen instanceof GuiOverlay) {
 					if(System.currentTimeMillis() > focusCooldown) {
@@ -177,7 +177,7 @@ public class mod_HowManyItems extends BaseMod
 					}
 				}
 			}
-			else if(Keyboard.isKeyDown(Config.allRecipes.keyCode)) {
+			else if(Utils.isKeyDown(Config.allRecipes)) {
 				if (guiscreen instanceof GuiOverlay) {
 					guiscreen = GuiOverlay.screen;
 				}
@@ -186,7 +186,7 @@ public class mod_HowManyItems extends BaseMod
 			else {
 				keyHeldLastTick = false;
 			}
-			if(Keyboard.isKeyDown(Config.pushRecipe.keyCode) || Keyboard.isKeyDown(Config.pushUses.keyCode) || Keyboard.isKeyDown(Config.prevRecipe.keyCode)) {
+			if(Utils.isKeyDown(Config.pushRecipe) || Utils.isKeyDown(Config.pushUses) || Utils.isKeyDown(Config.prevRecipe)) {
 				keyHeldLastTick = true;
 			}
 			
@@ -196,7 +196,7 @@ public class mod_HowManyItems extends BaseMod
 	
 	public boolean OnTickInGame(Minecraft minecraft)
     {
-		if(minecraft.currentScreen == null && Keyboard.isKeyDown(Config.allRecipes.keyCode) && !keyHeldLastTick) {
+		if(minecraft.currentScreen == null && Utils.isKeyDown(Config.allRecipes) && !keyHeldLastTick) {
 			keyHeldLastTick = true;
 			pushRecipe(null, null, false);
 		}
@@ -208,7 +208,7 @@ public class mod_HowManyItems extends BaseMod
 	
 	public void KeyboardEvent(KeyBinding event)
     {
-		if (event == Config.toggleOverlay) {
+		if (event == Config.toggleOverlay && Utils.keybindValid(Config.toggleOverlay)) {
 			if (ModLoader.isGUIOpen(GuiContainer.class) && !GuiOverlay.searchBoxFocused()) {
 				Config.overlayEnabled = !Config.overlayEnabled;
 				Config.writeConfig();

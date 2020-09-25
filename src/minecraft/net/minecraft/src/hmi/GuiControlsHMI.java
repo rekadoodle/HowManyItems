@@ -60,6 +60,7 @@ public class GuiControlsHMI extends GuiScreen {
         		for (int j = 0; j < mc.gameSettings.keyBindings.length; j++) {
         			if(mc.gameSettings.keyBindings[j] == Config.toggleOverlay) {
         				mc.gameSettings.setKeyBinding(j, i);
+        				break;
         			}
         		}
         	}

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -398,5 +399,25 @@ public class Utils {
 			return Utils.class.getClassLoader().loadClass(Utils.class.getPackage().getName() + ".references." + path + ".ConcreteHandler").newInstance(); 
 		}
 		catch (Throwable e) { e.printStackTrace(); return null; } 
+	}
+	
+	public static boolean isKeyDown(KeyBinding keybind) {
+		return isKeyDown(keybind.keyCode);
+	}
+	
+	public static boolean isKeyDown(int keyCode) {
+		return Keyboard.isKeyDown(keyCode) && keyCodeValid(keyCode);
+	}
+	
+	public static boolean keyEquals(int keyCode, KeyBinding keybind) {
+		return keyCode == keybind.keyCode && keybindValid(keybind);
+	}
+	
+	public static boolean keybindValid(KeyBinding keybind) {
+		return keyCodeValid(keybind.keyCode);
+	}
+	
+	public static boolean keyCodeValid(int keyCode) {
+		return keyCode != Keyboard.KEY_NONE;
 	}
 }
