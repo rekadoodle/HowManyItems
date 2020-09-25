@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.src.*;
+import net.minecraft.src.hmi.TabUtils;
 
 public class TabSmelting extends TabWithTexture {
 
@@ -139,6 +140,10 @@ public class TabSmelting extends TabWithTexture {
 					String[] string = ((String)obj).split(":");
 					obj = Integer.parseInt(string[0]);
 					dmg = Integer.parseInt(string[1]);
+				}
+				if(TabUtils.ic2mpHandler != null && TabUtils.ic2mpHandler.isRecipeInput(obj)) {
+					dmg = TabUtils.ic2mpHandler.getDamage(obj);
+					obj = TabUtils.ic2mpHandler.getId(obj);
 				}
 				if ((Integer)obj < Block.blocksList.length) {
 					if(Block.blocksList[(Integer)obj] == null) continue;

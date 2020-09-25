@@ -14,6 +14,7 @@ public class TabUtils {
 	
 	public static TabHandler btwHandler;
 	public static AetherHandler aetherHandler;
+	public static IC2MPHandler ic2mpHandler;
 
 	public static void loadTabs(ArrayList<Tab> tabList, BaseMod mod) {
 		workbenchTab = new TabCrafting(mod);
@@ -36,6 +37,10 @@ public class TabUtils {
 		}
 		if(ModLoader.isModLoaded("mod_IC2")) {
 			((TabHandler) Utils.getHandler("ic2")).loadTabs(mod);
+		}
+		if(ModLoader.isModLoaded("mod_IC2Mp")) {
+			ic2mpHandler = ((IC2MPHandler) Utils.getHandler("ic2mp"));
+			ic2mpHandler.loadTabs(mod);
 		}
 		if(ModLoader.isModLoaded("mod_Aether")) {
 			aetherHandler = ((AetherHandler) Utils.getHandler("aether"));
