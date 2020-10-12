@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "hmifabric",
+  "version": "${version}",
+
+  "name": "HMI Fabric Port",
+  "description": "This is a port of HMI (commit 27) to fabric. Note that there is no mod integration.",
+  "authors": [
+    "Rek",
+    "calmilamsy"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/",
+    "sources": "https://github.com/rekadoodle/HowManyItems"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/hmifabric/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "stationmod_client": [
+      "net.glasslauncher.hmifabric.HowManyItems"
+    ]
+  },
+  "mixins": [
+    "hmifabric.mixins.json"
+  ],
+
+  "depends": {
+    "minecraft": "1.0.0-beta.7.3"
+  }
+}

@@ -1,5 +1,10 @@
 # Changelog
 
+## [v5.0.0] - 2020/10/12
+- Ported to fabric.
+- Mod no longer crashes servers when installed on them, but does nothing when installed on a server.
+- **No mod integration.**
+
 ## [v4.2.0] - 2019/08/24
 - Mod now contained in it's own package
 - New icons created for each button, generic recipe viewer textures added for texture pack support
