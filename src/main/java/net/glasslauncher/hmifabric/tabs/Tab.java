@@ -35,7 +35,7 @@ public abstract class Tab {
 	public abstract void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY);
 	
 	public String name() {
-		return TranslationStorage.getInstance().translate(getTabItem().getTranslationKey()).toString().trim();
+		return TranslationStorage.getInstance().method_995(getTabItem().getTranslationKey());
 	}
 	
 	public ArrayList<ItemInstance> equivalentCraftingStations = new ArrayList<>();

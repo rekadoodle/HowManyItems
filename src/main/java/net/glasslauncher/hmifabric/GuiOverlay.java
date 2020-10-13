@@ -357,7 +357,7 @@ public class GuiOverlay extends ScreenBase {
 		}
 		else if(inventoryplayer.getCursorItem() == null && Utils.hoveredItem(screen, posX, posY) != null) {
 			ItemInstance item = Utils.hoveredItem(screen, posX, posY);
-			s = TranslationStorage.getInstance().translate(item.getTranslationKey() + ".name");
+			s = TranslationStorage.getInstance().method_995(item.getTranslationKey());
 			int k1 = posX;
 			int i2 = posY;
 			int j2 = textManager.getTextWidth(s);
@@ -786,7 +786,7 @@ public class GuiOverlay extends ScreenBase {
 		ArrayList<ItemInstance> newList = new ArrayList<>();
 		if(searchBox != null && searchBox.method_1876().length() > 0) {
 			for(ItemInstance currentItem : listToSearch) {
-				String s = ("" + TranslationStorage.getInstance().translate(currentItem.getTranslationKey())).trim();
+				String s = (TranslationStorage.getInstance().method_995(currentItem.getTranslationKey()));
 				if(s.toLowerCase().contains(searchBox.method_1876().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem))) {
 					newList.add(currentItem);
 				}
