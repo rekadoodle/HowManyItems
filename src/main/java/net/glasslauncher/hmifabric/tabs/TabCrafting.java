@@ -107,7 +107,7 @@ public class TabCrafting extends TabWithTexture {
                     } else
                     if(irecipe instanceof ShapelessRecipe)
                     {
-                        List list = (List)Utils.getPrivateValue(ShapelessRecipe.class, (ShapedRecipe)irecipe, 1);
+                        List list = (List)Utils.getPrivateValue(ShapelessRecipe.class, irecipe, 1);
                         items[j][0] = irecipe.getOutput();
                         for(int j1 = 0; j1 < list.size(); j1++)
                         {
