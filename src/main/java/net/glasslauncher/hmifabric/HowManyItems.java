@@ -220,7 +220,6 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
                 ((GuiRecipeViewer) gui).push(item, getUses);
             }
             else if (!GuiOverlay.searchBoxFocused() && getTabs().size() > 0){
-                Utils.getMC().lockCursor();
                 GuiRecipeViewer newgui = new GuiRecipeViewer(item, getUses, gui);
                 Utils.getMC().currentScreen = newgui;
                 ScreenScaler scaledresolution = new ScreenScaler(Utils.getMC().options, Utils.getMC().actualWidth, Utils.getMC().actualHeight);
