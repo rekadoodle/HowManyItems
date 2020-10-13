@@ -83,7 +83,7 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
         TabUtils.addEquivalentFurnace(item);
     }
 
-    private GuiOverlay overlay;
+    public GuiOverlay overlay;
     public static HowManyItems thisMod;
 
     public static void onSettingChanged() {
@@ -204,14 +204,6 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
     @Override
     public void keyPressed()
     {
-        if (Keyboard.getEventKey() == Config.toggleOverlay.key && Utils.keybindValid(Config.toggleOverlay)) {
-            if (Utils.isGuiOpen(ContainerBase.class) && !GuiOverlay.searchBoxFocused()) {
-                System.out.println("E");
-                Config.overlayEnabled = !Config.overlayEnabled;
-                Config.writeConfig();
-                if(overlay != null) overlay.toggle();
-            }
-        }
     }
 
     public static void pushRecipe(ScreenBase gui, ItemInstance item, boolean getUses) {

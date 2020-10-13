@@ -8,7 +8,8 @@
   "server": [
   ],
   "client": [
-    "MixinGameRenderer"
+    "MixinGameRenderer",
+    "MixinContainerBase"
   ],
   "injectors": {
     "defaultRequire": 1
