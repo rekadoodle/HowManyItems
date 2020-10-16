@@ -11,7 +11,6 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.client.event.keyboard.KeyPressed;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.lang.reflect.Method;
@@ -29,18 +28,7 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
     public void preInit() {
         try {
             fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
-//            for (Method method : DrawableHelper.class.getDeclaredMethods()) {
-//                if (method.getName().equals("fill")) {
-//                    fill = method;
-//                    break;
-//                }
-//                else if (method.getName().equals("method_1932")) {
-//                    fill = method;
-//                    break;
-//                }
-//            }
         } catch (Exception e) {
-            // This exists in dev, but not when the game is run normally.
             e.printStackTrace();
         }
         fill.setAccessible(true);
