@@ -149,6 +149,11 @@ public class TabSmelting extends TabWithTexture {
 					obj = Integer.parseInt(string[0]);
 					dmg = Integer.parseInt(string[1]);
 				}
+				else if (obj instanceof ItemInstance) {
+					ItemInstance itemInstance = (ItemInstance) obj;
+					obj = itemInstance.itemId;
+					dmg = itemInstance.getDamage();
+				}
 				if ((Integer)obj < BlockBase.BY_ID.length) {
 					if(BlockBase.BY_ID[(Integer)obj] == null) continue;
 					input = new ItemInstance(BlockBase.BY_ID[(Integer)obj], 1, dmg);
