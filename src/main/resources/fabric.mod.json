@@ -19,7 +19,7 @@
 
   "environment": "client",
   "entrypoints": {
-    "stationmod_client": [
+    "main": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ]
   },

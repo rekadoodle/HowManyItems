@@ -1,5 +1,6 @@
 package net.glasslauncher.hmifabric;
 
+import net.fabricmc.api.ModInitializer;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawableHelper;
@@ -8,7 +9,6 @@ import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.client.event.keyboard.KeyPressed;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
 import org.lwjgl.input.Mouse;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed {
+public class HowManyItems implements ModInitializer, StationMod, KeyBindingRegister {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
@@ -26,14 +26,6 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
 
     @Override
     public void preInit() {
-        try {
-            fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        fill.setAccessible(true);
-        thisMod = this;
-        Config.init();
     }
 
     @Override
@@ -189,11 +181,6 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
     public static boolean keyHeldLastTick = false;
     private static long focusCooldown = 0L;
 
-    @Override
-    public void keyPressed()
-    {
-    }
-
     public static void pushRecipe(ScreenBase gui, ItemInstance item, boolean getUses) {
         if(Utils.getMC().player.inventory.getCursorItem() == null) {
             if (gui instanceof GuiRecipeViewer) {
@@ -260,4 +247,17 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
     private static ArrayList<Tab> tabs;
     public static ArrayList<Tab> allTabs;
     private static ArrayList<Tab> modTabs = new ArrayList<>();
+
+    @Override
+    public void onInitialize() {
+        KeyBindingRegister.EVENT.register(this);
+        try {
+            fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        fill.setAccessible(true);
+        thisMod = this;
+        Config.init();
+    }
 }
