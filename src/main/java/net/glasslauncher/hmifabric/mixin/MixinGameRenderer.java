@@ -19,7 +19,7 @@ public class MixinGameRenderer {
     @Inject(method = "method_1844", at = @At(value = "TAIL"))
     private void onTick(float delta, CallbackInfo ci) {
         long newClock = 0L;
-        if (minecraft.level != null) {
+        if (minecraft.level != null && HowManyItems.thisMod != null) {
             newClock = minecraft.level.getLevelTime();
             if (newClock != clock) {
                 HowManyItems.thisMod.OnTickInGame(minecraft);
