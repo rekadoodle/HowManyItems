@@ -393,36 +393,34 @@ public class GuiOverlay extends ScreenBase {
 		if(Config.centredSearchBar) canvasHeight += BUTTON_HEIGHT;
 		searchBox.method_1879(posX, posY, eventButton);
 		if(!showHiddenItems) {
-		if(hoverItem != null && minecraft.player.inventory.getCursorItem() == null) {
-			if(minecraft.player.inventory.getCursorItem() == null && Config.cheatsEnabled) {
-				
-				if(eventButton == 0 || eventButton == 1) {
-					if(!minecraft.level.isClient) {
-						ItemInstance spawnedItem = hoverItem.copy();
-						if(eventButton == 0) spawnedItem.count = hoverItem.method_709();
-						else spawnedItem.count = 1;
-						minecraft.player.inventory.method_671(spawnedItem);
-					}
-					else if(Config.mpGiveCommand.length() > 0) {
-						NumberFormat numberformat = NumberFormat.getIntegerInstance();
-			            numberformat.setGroupingUsed(false);
-			            MessageFormat messageformat = new MessageFormat(Config.mpGiveCommand);
-			            messageformat.setFormatByArgumentIndex(1, numberformat);
-			            messageformat.setFormatByArgumentIndex(2, numberformat);
-			            messageformat.setFormatByArgumentIndex(3, numberformat);
-			            Object aobj[] = {
-			                minecraft.player.name, hoverItem.itemId, (eventButton == 0) ? hoverItem.method_709() : 1, Integer.valueOf(hoverItem.getDamage())
-			            };
-			            minecraft.player.sendChatMessage(messageformat.format((aobj)));
+			if(hoverItem != null && minecraft.player.inventory.getCursorItem() == null) {
+				if(minecraft.player.inventory.getCursorItem() == null && Config.cheatsEnabled) {
+
+					if(eventButton == 0 || eventButton == 1) {
+						if(!minecraft.level.isClient) {
+							ItemInstance spawnedItem = hoverItem.copy();
+							if(eventButton == 0) spawnedItem.count = hoverItem.method_709();
+							else spawnedItem.count = 1;
+							minecraft.player.inventory.method_671(spawnedItem);
+						}
+						else if(Config.mpGiveCommand.length() > 0) {
+							NumberFormat numberformat = NumberFormat.getIntegerInstance();
+							numberformat.setGroupingUsed(false);
+							MessageFormat messageformat = new MessageFormat(Config.mpGiveCommand);
+							messageformat.setFormatByArgumentIndex(1, numberformat);
+							messageformat.setFormatByArgumentIndex(2, numberformat);
+							messageformat.setFormatByArgumentIndex(3, numberformat);
+							Object aobj[] = {
+								minecraft.player.name, hoverItem.itemId, (eventButton == 0) ? hoverItem.method_709() : 1, Integer.valueOf(hoverItem.getDamage())
+							};
+							minecraft.player.sendChatMessage(messageformat.format((aobj)));
+						}
 					}
 				}
+				else if(minecraft.player.inventory.getCursorItem() == null) {
+					HowManyItems.pushRecipe(screen, hoverItem, eventButton == 1);
+				}
 			}
-			else if(minecraft.player.inventory.getCursorItem() == null) {
-				HowManyItems.pushRecipe(screen, hoverItem, eventButton == 1);
-			}
-			
-		}
-		
 		}
 		else {
 			if(hoverItem != null && minecraft.player.inventory.getCursorItem() == null) {
@@ -831,7 +829,7 @@ public class GuiOverlay extends ScreenBase {
 
 	public static void focusSearchBox() {
 		if(searchBox != null) {
-			if(searchBox.field_2420 = !searchBox.field_2420) {
+			if(searchBox.field_2420 = true) {
 				Keyboard.enableRepeatEvents(false);
 			}
 		}

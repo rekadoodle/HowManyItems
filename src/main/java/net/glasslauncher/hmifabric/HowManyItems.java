@@ -75,8 +75,7 @@ public class HowManyItems implements ModInitializer, StationMod, KeyBindingRegis
         if(guiscreen instanceof ContainerBase) {
             ContainerBase screen = (ContainerBase)guiscreen;
             if(Config.overlayEnabled) {
-                if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height
-                        || screen.width != overlay.xSize || screen.height != overlay.ySize) {
+                if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height) {
                     overlay = new GuiOverlay(screen);
                 }
                 overlay.onTick();
