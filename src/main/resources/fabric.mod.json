@@ -19,7 +19,7 @@
 
   "environment": "client",
   "entrypoints": {
-    "init": [
+    "client": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ]
   },

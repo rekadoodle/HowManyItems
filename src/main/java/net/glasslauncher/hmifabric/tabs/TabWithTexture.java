@@ -1,17 +1,17 @@
 package net.glasslauncher.hmifabric.tabs;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
 
 public abstract class TabWithTexture extends Tab {
 
-	public TabWithTexture(StationMod tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int minPaddingX, int minPaddingY, int textureX, int textureY) {
+	public TabWithTexture(ClientModInitializer tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int minPaddingX, int minPaddingY, int textureX, int textureY) {
 		this(tabCreator, slotsPerRecipe, texturePath, width, height, minPaddingX, minPaddingY, textureX, textureY, 0, 0);
 	}
 	
-	public TabWithTexture(StationMod tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int minPaddingX, int minPaddingY, int textureX, int textureY, int buttonX, int buttonY) {
+	public TabWithTexture(ClientModInitializer tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int minPaddingX, int minPaddingY, int textureX, int textureY, int buttonX, int buttonY) {
 		super(tabCreator, slotsPerRecipe, width, height, minPaddingX, minPaddingY);
 		slots = new Integer[slotsPerRecipe][];
 		TEXTURE_PATH = texturePath;

@@ -1,6 +1,6 @@
 package net.glasslauncher.hmifabric;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawableHelper;
@@ -10,7 +10,6 @@ import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
 import org.lwjgl.input.Mouse;
 
 import java.lang.reflect.Method;
@@ -18,15 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class HowManyItems implements ModInitializer, StationMod, KeyBindingRegister {
+public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
     private static Method fill;
-
-    @Override
-    public void preInit() {
-    }
 
     @Override
     public void registerKeyBindings(List<KeyBinding> list) {
@@ -248,7 +243,7 @@ public class HowManyItems implements ModInitializer, StationMod, KeyBindingRegis
     private static ArrayList<Tab> modTabs = new ArrayList<>();
 
     @Override
-    public void onInitialize() {
+    public void onInitializeClient() {
         KeyBindingRegister.EVENT.register(this);
         try {
             fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
