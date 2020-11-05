@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.ClientInteractionManager;
@@ -20,7 +21,6 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeRegistry;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
 import org.lwjgl.input.Keyboard;
 
 public class TabCrafting extends TabWithTexture {
@@ -28,12 +28,12 @@ public class TabCrafting extends TabWithTexture {
 	protected List recipesComplete;
 	protected List recipes;
 	private int slotsWidth;
-	protected StationMod mod;
+	protected ClientModInitializer mod;
 	private BlockBase tabBlock;
 	private boolean isVanillaWorkbench = false; //THIS IS LAZY
 	public ArrayList<Class<? extends ContainerBase>> guiCraftingStations = new ArrayList<>();
 	
-	public TabCrafting(StationMod tabCreator) {
+	public TabCrafting(ClientModInitializer tabCreator) {
 		this(tabCreator, new ArrayList(RecipeRegistry.getInstance().getRecipes()), BlockBase.WORKBENCH);
 		for (int i = 0; i < recipesComplete.size(); i++) {
 			//Removes recipes that are too big and ruin everything @flans mod
@@ -47,12 +47,12 @@ public class TabCrafting extends TabWithTexture {
 		guiCraftingStations.add(Crafting.class);
 	}
 	
-	public TabCrafting(StationMod tabCreator, List recipesComplete, BlockBase tabBlock) {
+	public TabCrafting(ClientModInitializer tabCreator, List recipesComplete, BlockBase tabBlock) {
 		this(tabCreator, 10, recipesComplete, tabBlock, "/gui/crafting.png", 118, 56, 28, 15, 56, 46, 3);
 		slots[0] = new Integer[]{96, 23};
 	}
 
-	public TabCrafting(StationMod tabCreator, int slotsPerRecipe, List recipesComplete, BlockBase tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
+	public TabCrafting(ClientModInitializer tabCreator, int slotsPerRecipe, List recipesComplete, BlockBase tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
 		super(tabCreator, slotsPerRecipe, texturePath, width, height, 3, 4, textureX, textureY, buttonX, buttonY);
 		this.slotsWidth = slotsWidth;
 		this.recipesComplete = recipesComplete;
@@ -107,7 +107,7 @@ public class TabCrafting extends TabWithTexture {
                     } else
                     if(irecipe instanceof ShapelessRecipe)
                     {
-                        List list = (List)Utils.getPrivateValue(ShapelessRecipe.class, (ShapedRecipe)irecipe, 1);
+                        List list = (List)Utils.getPrivateValue(ShapelessRecipe.class, irecipe, 1);
                         items[j][0] = irecipe.getOutput();
                         for(int j1 = 0; j1 < list.size(); j1++)
                         {

@@ -71,7 +71,7 @@ public class Utils {
 	
 	//Returns the translated name of an itemstack with its ID if config allows and ID is wanted
 	public static String getNiceItemName(ItemInstance item, boolean withID) {
-		String s = TranslationStorage.getInstance().translate(item.getTranslationKey() + ".name");
+		String s = TranslationStorage.getInstance().method_995(item.getTranslationKey());
 		if(s == null || s.length() == 0) {
 			s = item.getTranslationKey();
 			if(s == null) s = "null";
@@ -124,7 +124,7 @@ public class Utils {
 	                try
 	                {
 	                    int l = item.getTexturePosition(itemstack);
-	                    String s = TranslationStorage.getInstance().translate(itemstack.getTranslationKey());
+	                    String s = TranslationStorage.getInstance().method_995(itemstack.getTranslationKey());
 	                    if(s.length() == 0) s = itemstack.getTranslationKey() + "@" + l;
 	                    if(dmg >= 4 && (s.contains(String.valueOf(dmg)) || s.contains(String.valueOf(dmg + 1)) || s.contains(String.valueOf(dmg - 1)))){
 	                    	break;

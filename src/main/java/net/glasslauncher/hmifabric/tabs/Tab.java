@@ -2,13 +2,13 @@ package net.glasslauncher.hmifabric.tabs;
 
 import java.util.ArrayList;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
 
 public abstract class Tab {
 	
-	public Tab(StationMod tabCreator, int slotsPerRecipe, int width, int height, int minPaddingX, int minPaddingY) {
+	public Tab(ClientModInitializer tabCreator, int slotsPerRecipe, int width, int height, int minPaddingX, int minPaddingY) {
 		slots = new Integer[slotsPerRecipe][];
 		WIDTH = width;
 		HEIGHT = height;
@@ -35,7 +35,7 @@ public abstract class Tab {
 	public abstract void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY);
 	
 	public String name() {
-		return TranslationStorage.getInstance().translate(getTabItem().getTranslationKey()).toString().trim();
+		return TranslationStorage.getInstance().method_995(getTabItem().getTranslationKey());
 	}
 	
 	public ArrayList<ItemInstance> equivalentCraftingStations = new ArrayList<>();
@@ -49,7 +49,7 @@ public abstract class Tab {
 	public int autoX = 1;
 	public int autoY = 2;
 	
-	public final StationMod TAB_CREATOR;
+	public final ClientModInitializer TAB_CREATOR;
 	
 	public Integer[][] slots;
 	

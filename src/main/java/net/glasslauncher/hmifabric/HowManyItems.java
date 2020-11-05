@@ -1,5 +1,6 @@
 package net.glasslauncher.hmifabric;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawableHelper;
@@ -8,10 +9,7 @@ import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.client.event.keyboard.KeyPressed;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.lang.reflect.Method;
@@ -19,34 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed {
+public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
     private static Method fill;
-
-    @Override
-    public void preInit() {
-        try {
-            fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
-//            for (Method method : DrawableHelper.class.getDeclaredMethods()) {
-//                if (method.getName().equals("fill")) {
-//                    fill = method;
-//                    break;
-//                }
-//                else if (method.getName().equals("method_1932")) {
-//                    fill = method;
-//                    break;
-//                }
-//            }
-        } catch (Exception e) {
-            // This exists in dev, but not when the game is run normally.
-            e.printStackTrace();
-        }
-        fill.setAccessible(true);
-        thisMod = this;
-        Config.init();
-    }
 
     @Override
     public void registerKeyBindings(List<KeyBinding> list) {
@@ -83,7 +58,7 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
         TabUtils.addEquivalentFurnace(item);
     }
 
-    private GuiOverlay overlay;
+    public GuiOverlay overlay;
     public static HowManyItems thisMod;
 
     public static void onSettingChanged() {
@@ -95,8 +70,7 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
         if(guiscreen instanceof ContainerBase) {
             ContainerBase screen = (ContainerBase)guiscreen;
             if(Config.overlayEnabled) {
-                if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height
-                        || screen.width != overlay.xSize || screen.height != overlay.ySize) {
+                if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height) {
                     overlay = new GuiOverlay(screen);
                 }
                 overlay.onTick();
@@ -201,26 +175,12 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
     public static boolean keyHeldLastTick = false;
     private static long focusCooldown = 0L;
 
-    @Override
-    public void keyPressed()
-    {
-        if (Keyboard.getEventKey() == Config.toggleOverlay.key && Utils.keybindValid(Config.toggleOverlay)) {
-            if (Utils.isGuiOpen(ContainerBase.class) && !GuiOverlay.searchBoxFocused()) {
-                System.out.println("E");
-                Config.overlayEnabled = !Config.overlayEnabled;
-                Config.writeConfig();
-                if(overlay != null) overlay.toggle();
-            }
-        }
-    }
-
     public static void pushRecipe(ScreenBase gui, ItemInstance item, boolean getUses) {
         if(Utils.getMC().player.inventory.getCursorItem() == null) {
             if (gui instanceof GuiRecipeViewer) {
                 ((GuiRecipeViewer) gui).push(item, getUses);
             }
             else if (!GuiOverlay.searchBoxFocused() && getTabs().size() > 0){
-                Utils.getMC().lockCursor();
                 GuiRecipeViewer newgui = new GuiRecipeViewer(item, getUses, gui);
                 Utils.getMC().currentScreen = newgui;
                 ScreenScaler scaledresolution = new ScreenScaler(Utils.getMC().options, Utils.getMC().actualWidth, Utils.getMC().actualHeight);
@@ -281,4 +241,17 @@ public class HowManyItems implements StationMod, KeyBindingRegister, KeyPressed 
     private static ArrayList<Tab> tabs;
     public static ArrayList<Tab> allTabs;
     private static ArrayList<Tab> modTabs = new ArrayList<>();
+
+    @Override
+    public void onInitializeClient() {
+        KeyBindingRegister.EVENT.register(this);
+        try {
+            fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        fill.setAccessible(true);
+        thisMod = this;
+        Config.init();
+    }
 }
