@@ -653,7 +653,7 @@ public class GuiRecipeViewer extends GuiContainer
         	
         	
         	
-        
+        Utils.postRender()
     }
     
     public void onGuiClosed()
