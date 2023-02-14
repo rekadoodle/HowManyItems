@@ -780,6 +780,7 @@ public class GuiOverlay extends GuiScreen {
 		if(searchBox != null && searchBox.getText().length() > 0) {
 			for(ItemStack currentItem : listToSearch) {
 				String s = (new StringBuilder()).append("").append(StringTranslate.getInstance().translateNamedKey(currentItem.getItemName())).toString().trim();
+				if(s.isEmpty()) s = currentItem.getItemName();
 				if(s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem))) {
 					newList.add(currentItem);
 				}
